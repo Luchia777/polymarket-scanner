@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Polymarket Rewards Scanner</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -15,19 +15,14 @@
   --text:#0f172a;--muted:#475569;--hint:#94a3b8;
   --green:#10b981;--green-dark:#059669;--green-bg:#d1fae5;--green-text:#065f46;
   --amber-bg:#fef3c7;--amber-text:#92400e;
-  --red:#ef4444;--red-light:#fca5a5;
-  --slate:#0f172a;--blue:#4f46e5;
+  --red:#ef4444;--slate:#0f172a;--blue:#4f46e5;
   --font:'DM Sans',sans-serif;--mono:'JetBrains Mono',monospace;
   --r:10px;--r-sm:7px;
   --shadow:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.04);
 }
 html{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
 body{min-height:100vh}
-
-/* ── Layout ── */
 .app{max-width:1500px;margin:0 auto;padding:20px 18px}
-
-/* ── Header ── */
 .hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
 .hdr-left{display:flex;align-items:center;gap:10px}
 .logo{width:34px;height:34px;background:var(--slate);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -37,8 +32,6 @@ body{min-height:100vh}
 .live-pill{display:flex;align-items:center;gap:5px;padding:4px 11px;background:var(--green-bg);border-radius:20px;font-size:11px;font-weight:600;color:var(--green-text)}
 .live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-
-/* ── Filter Panel ── */
 .fp{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:16px;box-shadow:var(--shadow)}
 .fp-row{display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap}
 .fp-group{display:flex;flex-direction:column;gap:6px}
@@ -47,152 +40,69 @@ body{min-height:100vh}
 .tog{min-width:46px;min-height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:13px;font-weight:600;cursor:pointer;background:var(--card);color:var(--muted);font-family:var(--font);transition:all .12s}
 .tog.on{background:var(--slate);color:#fff;border-color:var(--slate)}
 .tog:hover:not(.on){border-color:#94a3b8}
-
-/* ── FIX 4: Large accessible sliders ── */
 .sld-row{display:flex;align-items:center;gap:12px}
 .sld-val{font-size:13px;font-weight:700;color:var(--text);font-family:var(--mono);min-width:64px}
-input[type=range]{
-  -webkit-appearance:none;appearance:none;
-  width:150px;height:6px;border-radius:3px;
-  background:var(--border);outline:none;cursor:pointer;
-}
-input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none;appearance:none;
-  width:22px;height:22px;border-radius:50%;
-  background:var(--slate);border:3px solid #fff;
-  box-shadow:0 1px 4px rgba(0,0,0,.25),0 0 0 1px rgba(0,0,0,.08);
-  cursor:pointer;transition:transform .1s;
-}
-input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.1)}
-input[type=range]::-moz-range-thumb{
-  width:22px;height:22px;border-radius:50%;
-  background:var(--slate);border:3px solid #fff;
-  box-shadow:0 1px 4px rgba(0,0,0,.25);
-  cursor:pointer;
-}
-
+input[type=range]{-webkit-appearance:none;appearance:none;width:150px;height:6px;border-radius:3px;background:var(--border);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--slate);border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--slate);border:3px solid #fff;cursor:pointer}
 .fp-div{width:1px;height:40px;background:var(--border)}
 .fp-right{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
 .count-txt{font-size:13px;color:var(--muted)}
 .count-txt strong{color:var(--text);font-weight:700}
-.count-txt.zero strong{color:#f59e0b}
 .upd{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--hint);font-family:var(--mono)}
 .spin{width:9px;height:9px;border:1.5px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── Mode switcher ── */
 .mode-bar{display:flex;align-items:center;gap:8px;margin-bottom:14px}
-.mode-btn{padding:7px 16px;border-radius:var(--r-sm);font-size:13px;font-weight:600;border:1.5px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-family:var(--font);transition:all .12s;display:flex;align-items:center;gap:6px}
+.mode-btn{padding:7px 16px;border-radius:var(--r-sm);font-size:13px;font-weight:600;border:1.5px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-family:var(--font);transition:all .12s}
 .mode-btn.on{background:var(--slate);color:#fff;border-color:var(--slate)}
-.mode-btn:hover:not(.on){border-color:#94a3b8}
 .sort-hint{font-size:11px;color:var(--hint);margin-left:auto}
-
-/* ── TABLE MODE ── */
 .tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
 table{width:100%;border-collapse:collapse;table-layout:fixed}
-/* FIX 1: wide market column so questions get 2 lines */
-col.c-market{width:38%}
-col.c-reward{width:9%}
-col.c-spread{width:7%}
-col.c-min{width:6%}
-col.c-comp{width:9%}
-col.c-ob{width:11%}
-col.c-share{width:8%}
-col.c-action{width:10%}
-
-thead th{
-  font-size:10px;font-weight:600;color:var(--hint);text-align:left;
-  padding:10px 12px;letter-spacing:.06em;text-transform:uppercase;
-  border-bottom:1px solid var(--border);white-space:nowrap;
-  user-select:none;cursor:pointer;background:var(--card);
-}
-thead th:hover{color:var(--text)}
-thead th.sorted{color:var(--text)}
-thead th.r{text-align:right}
-.sort-arrow{margin-left:3px;font-size:9px;opacity:.4}
-.sort-arrow.on{opacity:1;color:var(--slate)}
-
+col.c-market{width:38%}col.c-reward{width:9%}col.c-spread{width:7%}col.c-min{width:6%}col.c-comp{width:9%}col.c-ob{width:11%}col.c-share{width:8%}col.c-action{width:10%}
+thead th{font-size:10px;font-weight:600;color:var(--hint);text-align:left;padding:10px 12px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;user-select:none;cursor:pointer;background:var(--card)}
+thead th:hover{color:var(--text)}thead th.r{text-align:right}
+.sort-arrow{margin-left:3px;font-size:9px;opacity:.4}.sort-arrow.on{opacity:1}
 tbody tr{border-bottom:.5px solid var(--border);transition:background .1s}
 tbody tr:last-child{border-bottom:none}
 tbody tr:hover{background:#f8fafc}
 tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
-
 .cat-pill{font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;background:#f1f5f9;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;flex-shrink:0}
-
-/* FIX 1: question — 2 lines, no hard truncate */
 .q-cell-wrap{display:flex;align-items:flex-start;gap:7px}
-.q-text{
-  font-weight:500;font-size:13px;color:var(--text);
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-  line-height:1.4;word-break:break-word;
-}
-
+.q-text{font-weight:500;font-size:13px;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
 .mono{font-family:var(--mono);font-size:12px}
 .g{color:var(--green-dark);font-weight:600}
-
-/* FIX 3: competition — always 5 slots */
 .dots5{display:flex;gap:3px;align-items:center}
-.d5{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.d5.on{background:var(--green)}
-.d5.off{background:#e2e8f0}
-
-/* FIX 2: order book — bids LEFT (green), asks RIGHT (red), volume-proportional */
+.d5{width:8px;height:8px;border-radius:50%}
+.d5.on{background:var(--green)}.d5.off{background:#e2e8f0}
 .ob-cell{display:flex;align-items:center;gap:2px;height:20px}
 .ob-bids{display:flex;align-items:center;gap:1px;justify-content:flex-end}
-.ob-asks{display:flex;align-items:center;gap:1px;justify-content:flex-start}
+.ob-asks{display:flex;align-items:center;gap:1px}
 .ob-mid{width:1px;height:14px;background:var(--border);flex-shrink:0;margin:0 2px}
 .ob-seg{height:12px;border-radius:2px;flex-shrink:0}
-.ob-seg.bid{background:#6ee7b7}
-.ob-seg.ask{background:#fca5a5}
-/* stake marker: a small arrow/line above ob bars */
-.ob-stake-wrap{display:flex;flex-direction:column;align-items:center;gap:1px;position:relative}
-.ob-stake-marker{
-  width:2px;height:8px;background:var(--blue);border-radius:1px;
-  position:relative;
-}
-.ob-stake-marker::before{
-  content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);
-  border-left:4px solid transparent;border-right:4px solid transparent;
-  border-bottom:4px solid var(--blue);
-}
-
+.ob-seg.bid{background:#6ee7b7}.ob-seg.ask{background:#fca5a5}
+.ob-stake-wrap{display:flex;flex-direction:column;align-items:center;gap:1px}
+.ob-stake-marker{width:2px;height:8px;background:var(--blue);border-radius:1px;position:relative}
+.ob-stake-marker::before{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:4px solid var(--blue)}
 .chip{font-size:11px;font-weight:700;font-family:var(--mono);padding:3px 9px;border-radius:20px;white-space:nowrap}
-.chip.g{background:var(--green-bg);color:var(--green-text)}
-.chip.a{background:var(--amber-bg);color:var(--amber-text)}
-.open-btn-sm{
-  display:inline-flex;align-items:center;gap:4px;
-  padding:6px 13px;background:var(--green);color:#fff;
-  border-radius:6px;font-size:12px;font-weight:600;
-  text-decoration:none;white-space:nowrap;border:none;
-  cursor:pointer;font-family:var(--font);transition:background .12s;
-}
+.chip.g{background:var(--green-bg);color:var(--green-text)}.chip.a{background:var(--amber-bg);color:var(--amber-text)}
+.open-btn-sm{display:inline-flex;align-items:center;gap:4px;padding:6px 13px;background:var(--green);color:#fff;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap;border:none;cursor:pointer;font-family:var(--font);transition:background .12s}
 .open-btn-sm:hover{background:var(--green-dark)}
-
-/* ── CARD MODE ── */
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
 .mcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;transition:box-shadow .15s,transform .15s}
 .mcard:hover{box-shadow:0 6px 20px rgba(0,0,0,.1);transform:translateY(-2px)}
 .mcard.best{border:2px solid var(--green)}
-
-/* Top accent bar for best cards */
-.mcard.best .mc-accent{height:3px;background:linear-gradient(90deg,var(--green),#34d399);flex-shrink:0}
+.mcard.best .mc-accent{height:3px;background:var(--green);flex-shrink:0}
 .mcard:not(.best) .mc-accent{display:none}
-
 .mc-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px 0}
 .mc-q{padding:6px 14px 0;font-size:14px;font-weight:600;color:var(--text);line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:42px}
-
-/* Hero reward block — main visual anchor */
-.mc-reward-hero{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 10px;margin:8px 14px 0;background:#f0fdf8;border-radius:var(--r-sm);border:1px solid #bbf7d0}
+.mc-reward-hero{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;margin:8px 14px 0;background:#f0fdf8;border-radius:var(--r-sm);border:1px solid #bbf7d0}
 .mc-reward-val{font-size:22px;font-weight:700;color:var(--green-dark);font-family:var(--mono);letter-spacing:-0.5px}
 .mc-reward-label{font-size:10px;color:var(--green-dark);font-weight:600;text-transform:uppercase;letter-spacing:.06em;opacity:.8}
 .mc-share-big{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
 .mc-share-num{font-size:18px;font-weight:700;font-family:var(--mono)}
-.mc-share-num.g{color:var(--green-dark)}
-.mc-share-num.a{color:#d97706}
+.mc-share-num.g{color:var(--green-dark)}.mc-share-num.a{color:#d97706}
 .mc-share-label{font-size:9px;color:var(--hint);text-align:right;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
-
-/* 2-column stats grid */
-.mc-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:10px 14px 4px}
+.mc-grid{display:grid;grid-template-columns:1fr 1fr;padding:10px 14px 4px}
 .mc-cell{display:flex;flex-direction:column;gap:2px;padding:6px 0;border-bottom:.5px solid var(--border)}
 .mc-cell:nth-child(odd){padding-right:12px;border-right:.5px solid var(--border)}
 .mc-cell:nth-child(even){padding-left:12px}
@@ -200,59 +110,35 @@ tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 .mc-k{font-size:10px;color:var(--hint);text-transform:uppercase;letter-spacing:.04em;font-weight:500}
 .mc-v{font-size:14px;font-weight:600;font-family:var(--mono);color:var(--text)}
 .mc-v.date{font-family:var(--font);font-size:13px;font-weight:500}
-
-/* Competition row */
 .mc-sep{height:.5px;background:var(--border);margin:4px 14px 0}
 .mc-comp{display:flex;align-items:center;gap:8px;padding:8px 14px}
 .comp-lbl{font-size:11px;font-weight:600;color:var(--green-dark)}
-
-/* Collapsible order book */
 .mc-ob-toggle{display:flex;align-items:center;justify-content:space-between;padding:7px 14px;cursor:pointer;user-select:none;background:#fafbfc;border-top:.5px solid var(--border)}
-.mc-ob-toggle-label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:5px}
+.mc-ob-toggle-label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .mc-ob-toggle-arrow{font-size:11px;color:var(--hint);transition:transform .2s}
 .mc-ob-toggle-arrow.open{transform:rotate(180deg)}
 .mc-ob-body{padding:8px 14px 10px;background:#fafbfc;border-top:.5px solid var(--border)}
 .mc-ob-row{display:flex;align-items:center;gap:7px;margin-bottom:3px}
 .mc-ob-price{font-size:10px;font-family:var(--mono);min-width:34px;text-align:right;font-weight:500}
-.mc-ob-price.a{color:var(--red)}
-.mc-ob-price.b{color:var(--green-dark)}
+.mc-ob-price.a{color:var(--red)}.mc-ob-price.b{color:var(--green-dark)}
 .mc-ob-bar{height:9px;border-radius:2px}
-.mc-ob-bar.ask{background:#fecaca}
-.mc-ob-bar.bid{background:#bbf7d0}
-.mc-ob-sz{font-size:9px;color:var(--hint);font-family:var(--mono);min-width:28px}
+.mc-ob-bar.ask{background:#fecaca}.mc-ob-bar.bid{background:#bbf7d0}
+.mc-ob-sz{font-size:9px;color:var(--hint);font-family:var(--mono)}
 .mc-stake{font-size:10px;font-weight:600;color:var(--blue);padding:3px 0;border-top:1.5px dashed var(--blue);border-bottom:1.5px dashed var(--blue);margin:4px 0}
 .mc-ob-sep{display:flex;align-items:center;gap:5px;padding:3px 0}
 .mc-ob-line{flex:1;height:.5px;background:var(--border)}
 .mc-ob-spread{font-size:9px;font-family:var(--mono);color:var(--hint)}
-
-.mc-footer{padding:10px 14px 12px}
-.open-btn-full{
-  display:flex;align-items:center;justify-content:center;gap:6px;width:100%;
-  padding:11px;background:var(--green);color:#fff;border-radius:var(--r-sm);
-  font-size:14px;font-weight:600;text-decoration:none;border:none;
-  cursor:pointer;font-family:var(--font);transition:background .12s;letter-spacing:.01em;
-}
+.mc-footer{padding:10px 14px 12px;margin-top:auto}
+.open-btn-full{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:11px;background:var(--green);color:#fff;border-radius:var(--r-sm);font-size:14px;font-weight:600;text-decoration:none;border:none;cursor:pointer;font-family:var(--font);transition:background .12s}
 .open-btn-full:hover{background:var(--green-dark)}
-
-/* ── Skeleton ── */
 .skel{background:linear-gradient(90deg,#e2e8f0 25%,#f1f5f9 50%,#e2e8f0 75%);background-size:200% 100%;animation:sh 1.4s infinite;border-radius:4px}
 @keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .skel-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;box-shadow:var(--shadow)}
-
-/* ── States ── */
 .state-box{display:flex;flex-direction:column;align-items:center;padding:60px 24px;text-align:center;gap:14px}
-.state-icon{font-size:44px}
-.state-title{font-size:17px;font-weight:700}
-.state-sub{font-size:13px;color:var(--muted);max-width:360px;line-height:1.6}
+.state-icon{font-size:44px}.state-title{font-size:17px;font-weight:700}
+.state-sub{font-size:13px;color:var(--muted);max-width:400px;line-height:1.6}
 .retry-btn{padding:9px 22px;background:var(--slate);color:#fff;border:none;border-radius:var(--r-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)}
-
-@media(max-width:640px){
-  .app{padding:12px 10px}
-  .fp-div{display:none}
-  .fp-row{gap:12px}
-  input[type=range]{width:110px}
-  .cards-grid{grid-template-columns:1fr}
-}
+@media(max-width:640px){.app{padding:12px 10px}.fp-div{display:none}.fp-row{gap:12px}input[type=range]{width:110px}.cards-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -260,71 +146,42 @@ tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 <script type="text/babel">
 const {useState,useEffect,useCallback,useRef,useMemo}=React;
 
-// ═══ CONSTANTS ═══════════════════════════════════════════════
-const EXCL=['politics','middle-east','геополитика','iran','ближний восток'];
+const EXCL=['politics','middle-east','геополитика','iran','ближний восток','government'];
 const ALLOWED=[20,40,50];
-const USE_MOCK=true;
 const CAT={crypto:'Крипто',cryptocurrency:'Крипто',sports:'Спорт',sport:'Спорт',
   esports:'Киберспорт',finance:'Финансы',science:'Наука',culture:'Культура',
-  technology:'Технологии',other:'Прочее'};
-const COMP_LABELS=['','Оч. низкая','Низкая','Средняя','Высокая','Оч. высокая'];
+  technology:'Технологии','fed-rates':'Финансы',economy:'Финансы',other:'Прочее'};
+const COMP=['','Оч. низкая','Низкая','Средняя','Высокая','Оч. высокая'];
 
-// ═══ MOCK DATA ════════════════════════════════════════════════
-const MOCK_MARKETS=[
-  {conditionId:'m1',slug:'will-btc-hit-100k-in-2025',_eventSlug:'will-btc-hit-100k-in-2025',question:'Достигнет ли BTC $100,000 в 2025 году?',category:'crypto',endDate:'2025-12-31T23:59:59Z',rewards:{minSize:20,maxSpread:2.2,rates:[{rewardsDailyRate:45}]},tokens:[{tokenId:'t1',outcome:'Yes',price:.063},{tokenId:'t1n',outcome:'No',price:.937}],volume:12500,liquidity:320,active:true,closed:false},
-  {conditionId:'m2',slug:'will-ethereum-etf-launch-in-2024',_eventSlug:'will-ethereum-etf-launch-in-2024',question:'Будет ли одобрен спотовый ETH ETF в США?',category:'crypto',endDate:'2025-06-30T23:59:59Z',rewards:{minSize:40,maxSpread:3.0,rates:[{rewardsDailyRate:62}]},tokens:[{tokenId:'t2',outcome:'Yes',price:.19},{tokenId:'t2n',outcome:'No',price:.81}],volume:45000,liquidity:1800,active:true,closed:false},
-  {conditionId:'m3',slug:'cs2-major-2025-winner',_eventSlug:'cs2-major-2025-winner',question:'Кто выиграет CS2 Major 2025?',category:'esports',endDate:'2025-06-15T23:59:59Z',rewards:{minSize:20,maxSpread:4.0,rates:[{rewardsDailyRate:35}]},tokens:[{tokenId:'t3',outcome:'Yes',price:.22},{tokenId:'t3n',outcome:'No',price:.78}],volume:3500,liquidity:210,active:true,closed:false},
-  {conditionId:'m4',slug:'fed-cut-rates-2025',_eventSlug:'fed-cut-rates-2025',question:'Снизит ли ФРС ставку в 2025?',category:'finance',endDate:'2025-12-31T23:59:59Z',rewards:{minSize:50,maxSpread:2.0,rates:[{rewardsDailyRate:78}]},tokens:[{tokenId:'t4',outcome:'Yes',price:.41},{tokenId:'t4n',outcome:'No',price:.59}],volume:98000,liquidity:11500,active:true,closed:false},
-  {conditionId:'m5',slug:'nba-championship-2025',_eventSlug:'nba-championship-2025',question:'Кто выиграет NBA Championship 2025?',category:'sports',endDate:'2025-06-25T23:59:59Z',rewards:{minSize:20,maxSpread:3.5,rates:[{rewardsDailyRate:52}]},tokens:[{tokenId:'t5',outcome:'Yes',price:.34},{tokenId:'t5n',outcome:'No',price:.66}],volume:67000,liquidity:4600,active:true,closed:false},
-  {conditionId:'m6',slug:'solana-price-2025',_eventSlug:'solana-price-2025',question:'Превысит ли Solana $200 в 2025?',category:'crypto',endDate:'2025-12-31T23:59:59Z',rewards:{minSize:40,maxSpread:4.5,rates:[{rewardsDailyRate:38}]},tokens:[{tokenId:'t6',outcome:'Yes',price:.28},{tokenId:'t6n',outcome:'No',price:.72}],volume:21000,liquidity:1450,active:true,closed:false},
-  {conditionId:'m7',slug:'bnb-price-2025',_eventSlug:'bnb-price-2025',question:'Превысит ли BNB $600 в 2025?',category:'crypto',endDate:'2025-12-31T23:59:59Z',rewards:{minSize:20,maxSpread:3.0,rates:[{rewardsDailyRate:41}]},tokens:[{tokenId:'t7',outcome:'Yes',price:.15},{tokenId:'t7n',outcome:'No',price:.85}],volume:8400,liquidity:490,active:true,closed:false},
-  {conditionId:'m8',slug:'stanley-cup-2025',_eventSlug:'stanley-cup-2025',question:'Кто выиграет Кубок Стэнли 2025?',category:'sports',endDate:'2025-06-30T23:59:59Z',rewards:{minSize:20,maxSpread:4.0,rates:[{rewardsDailyRate:33}]},tokens:[{tokenId:'t8',outcome:'Yes',price:.44},{tokenId:'t8n',outcome:'No',price:.56}],volume:15000,liquidity:870,active:true,closed:false},
-  {conditionId:'m9',slug:'xrp-price-end-2025',_eventSlug:'xrp-price-end-2025',question:'Превысит ли XRP $3 к концу 2025?',category:'crypto',endDate:'2025-12-31T23:59:59Z',rewards:{minSize:40,maxSpread:2.5,rates:[{rewardsDailyRate:55}]},tokens:[{tokenId:'t9',outcome:'Yes',price:.67},{tokenId:'t9n',outcome:'No',price:.33}],volume:34000,liquidity:2100,active:true,closed:false},
-  {conditionId:'m10',slug:'dota2-ti-2025',_eventSlug:'dota2-ti-2025',question:'Кто выиграет The International 2025 по Dota 2?',category:'esports',endDate:'2025-10-31T23:59:59Z',rewards:{minSize:20,maxSpread:3.5,rates:[{rewardsDailyRate:30}]},tokens:[{tokenId:'t10',outcome:'Yes',price:.09},{tokenId:'t10n',outcome:'No',price:.91}],volume:5600,liquidity:380,active:true,closed:false},
-];
-
-const MOCK_BOOKS={
-  t1:{bids:[{price:.041,size:60},{price:.040,size:104},{price:.029,size:7},{price:.028,size:68},{price:.025,size:120}],asks:[{price:.063,size:660},{price:.064,size:30},{price:.068,size:31},{price:.078,size:41},{price:.090,size:22}]},
-  t2:{bids:[{price:.18,size:45},{price:.17,size:120},{price:.16,size:80},{price:.15,size:200},{price:.14,size:55}],asks:[{price:.21,size:35},{price:.22,size:90},{price:.23,size:150},{price:.24,size:70},{price:.25,size:40}]},
-  t3:{bids:[{price:.20,size:25},{price:.18,size:55},{price:.16,size:30},{price:.15,size:80},{price:.13,size:45}],asks:[{price:.24,size:20},{price:.25,size:60},{price:.26,size:35},{price:.27,size:90},{price:.28,size:25}]},
-  t4:{bids:[{price:.40,size:1800},{price:.39,size:3500},{price:.38,size:5000}],asks:[{price:.42,size:2000},{price:.43,size:4500},{price:.44,size:3000}]},
-  t5:{bids:[{price:.33,size:55},{price:.32,size:130},{price:.31,size:80},{price:.30,size:210},{price:.29,size:45}],asks:[{price:.36,size:40},{price:.37,size:95},{price:.38,size:160}]},
-  t6:{bids:[{price:.27,size:38},{price:.26,size:95},{price:.25,size:55},{price:.24,size:140},{price:.23,size:70}],asks:[{price:.29,size:30},{price:.30,size:80},{price:.31,size:120}]},
-  t7:{bids:[{price:.14,size:32},{price:.13,size:78},{price:.12,size:45}],asks:[{price:.17,size:25},{price:.18,size:60},{price:.19,size:40}]},
-  t8:{bids:[{price:.43,size:48},{price:.42,size:110},{price:.41,size:65}],asks:[{price:.47,size:35},{price:.48,size:88},{price:.49,size:55}]},
-  t9:{bids:[{price:.66,size:40},{price:.65,size:95},{price:.64,size:55}],asks:[{price:.68,size:30},{price:.69,size:75},{price:.70,size:50}]},
-  t10:{bids:[{price:.08,size:28},{price:.07,size:65},{price:.06,size:42}],asks:[{price:.11,size:22},{price:.12,size:50},{price:.13,size:35}]},
-};
-
-// ═══ SERVICES ════════════════════════════════════════════════
-function dailyReward(m){
-  // Mock data: rewards.rates array
-  if(m.rewards?.rates?.length) return m.rewards.rates.reduce((s,r)=>s+(r.rewardsDailyRate??0),0);
-  // Real API: estimate from rewardsMinSize (Polymarket pays ~$1-5 per min-size unit per day)
-  // Use liquidity as proxy: higher liquidity markets tend to have higher rewards
-  // Real rewards endpoint: clob.polymarket.com/rewards — for now use minSize heuristic
-  const minSz=m.rewardsMinSize??m.rewards?.minSize??0;
-  if(!minSz) return 0;
-  // Conservative estimate: markets with lower minSize tend to have rewards $30-100/day range
-  // We'll show actual $ only when we have rates data, otherwise show minSize as proxy score
-  return minSz<=20?45:minSz<=50?60:80;
+// ── Services ──────────────────────────────────
+function getMinSize(m){return m.rewards?.minSize??m.rewardsMinSize??m.orderMinSize??0}
+function getMaxSpread(m){return m.rewards?.maxSpread??m.rewardsMaxSpread??99}
+function getDailyReward(m){
+  if(m.rewards?.rates?.length)return m.rewards.rates.reduce((s,r)=>s+(r.rewardsDailyRate??0),0);
+  const ms=getMinSize(m);
+  return ms<=20?45:ms<=50?65:80;
 }
 function compLevel(m){const l=m.liquidity??0;return l<500?1:l<2000?2:l<8000?3:l<25000?4:5}
+function getCategory(m){
+  if(m._tags?.length){
+    const shown=m._tags.find(t=>t.forceShow);
+    return shown?.slug??m._tags[0]?.slug??'other';
+  }
+  return m.category??'other';
+}
 function eligible(m,f){
-  const cat=(m.category??'').toLowerCase();
+  const cat=getCategory(m).toLowerCase();
   if(EXCL.some(e=>cat.includes(e)))return false;
-  // Support both mock (rewards.minSize) and real API (rewardsMinSize) field names
-  const ms=m.rewards?.minSize??m.rewardsMinSize??0;
+  const ms=getMinSize(m);
   if(!ALLOWED.includes(ms))return false;
   if(!f.sizes.includes(ms))return false;
-  if(dailyReward(m)<f.reward)return false;
-  const maxSpr=m.rewards?.maxSpread??m.rewardsMaxSpread??99;
-  if(maxSpr>=f.spread)return false;
+  if(getDailyReward(m)<f.reward)return false;
+  if(getMaxSpread(m)>=f.spread)return false;
   if(compLevel(m)>2)return false;
   return true;
 }
 function analyzeBook(tokenId,book,minSize){
-  const empty={tokenId,bestBidPrice:0,bestAskPrice:0,spread:0,topBidVolume:0,ourStakeUSD:0,pct:0,hasDom:false,ok:false,bids:[],asks:[],stakeLevel:null};
+  const empty={tokenId,bestBidPrice:0,bestAskPrice:0,spread:0,topBidVolume:0,ourStakeUSD:0,pct:0,hasDom:false,ok:false,bids:[],asks:[],stakeLevel:0};
   if(!book?.bids?.length||!book?.asks?.length)return empty;
   const bids=[...book.bids].filter(b=>b.price>0&&b.size>0).sort((a,b)=>b.price-a.price);
   const asks=[...book.asks].filter(a=>a.price>0&&a.size>0).sort((a,b)=>a.price-b.price);
@@ -334,35 +191,56 @@ function analyzeBook(tokenId,book,minSize){
   const stake=minSize*bb.price;
   const pct=vol>0?(stake/vol)*100:0;
   const hasDom=bids.some(b=>b.size*b.price>500);
-  // Find which bid level the stake would land on
-  const stakeIdx=bids.findIndex(b=>b.price<=bb.price);
-  return{tokenId,bestBidPrice:bb.price,bestAskPrice:ba.price,
-    spread:ba.price-bb.price,topBidVolume:vol,ourStakeUSD:stake,
-    pct,hasDom,ok:vol<300&&pct>=5&&!hasDom,
-    bids:bids.slice(0,5),asks:asks.slice(0,5),stakeLevel:0};
+  return{tokenId,bestBidPrice:bb.price,bestAskPrice:ba.price,spread:ba.price-bb.price,
+    topBidVolume:vol,ourStakeUSD:stake,pct,hasDom,
+    ok:vol<300&&pct>=5&&!hasDom,bids:bids.slice(0,5),asks:asks.slice(0,5),stakeLevel:0};
+}
+function getTokens(m){
+  let tokens=m.tokens??[];
+  if(!tokens.length&&m.clobTokenIds){
+    try{
+      const ids=JSON.parse(m.clobTokenIds);
+      const prices=m.outcomePrices?JSON.parse(m.outcomePrices):['0.5','0.5'];
+      tokens=[{tokenId:ids[0],outcome:'Yes',price:parseFloat(prices[0])},
+              {tokenId:ids[1],outcome:'No',price:parseFloat(prices[1])}];
+    }catch{}
+  }
+  return tokens;
+}
+function buildUrl(m){
+  // eventSlug / marketSlug — both needed for correct Polymarket URL
+  const evSlug=m._eventSlug;
+  const mktSlug=m.slug??m.market_slug;
+  if(evSlug&&mktSlug&&evSlug!==mktSlug)
+    return 'https://polymarket.com/event/'+evSlug+'/'+mktSlug;
+  return 'https://polymarket.com/event/'+(evSlug??mktSlug??'');
 }
 
-// ═══ API ══════════════════════════════════════════════════════
+// ── API ───────────────────────────────────────
 async function fetchMarkets(){
-  if(USE_MOCK){await new Promise(r=>setTimeout(r,800));return MOCK_MARKETS;}
-  // Use /events endpoint — it returns events with nested markets array
-  // Each market gets enriched with its parent event's slug for URL building
-  const res=await fetch('https://gamma-api.polymarket.com/events?active=true&closed=false&limit=100&order=volume&ascending=false');
-  if(!res.ok)throw new Error('HTTP '+res.status);
+  // Fetch events — each event contains nested markets array
+  const url='https://gamma-api.polymarket.com/events?active=true&closed=false&limit=100';
+  const res=await fetch(url);
+  if(!res.ok)throw new Error('API error: '+res.status);
   const events=await res.json();
-  // Flatten: for each event, attach its slug to each child market
+  if(!Array.isArray(events)||!events.length)throw new Error('Пустой ответ от API');
+  // Flatten events → markets, attach event slug and tags to each market
   const markets=[];
-  for(const ev of (Array.isArray(events)?events:[])){
+  for(const ev of events){
     for(const mkt of (ev.markets??[])){
-      markets.push({...mkt, _eventSlug:ev.slug, category:(ev.tags??[]).find(t=>t.forceShow)?.slug??ev.tags?.[0]?.slug??'other'});
+      markets.push({
+        ...mkt,
+        _eventSlug:ev.slug,
+        _tags:ev.tags??[],
+        liquidity:ev.liquidity??mkt.liquidity??0,
+      });
     }
   }
   return markets;
 }
 async function fetchBook(tid){
-  if(USE_MOCK){await new Promise(r=>setTimeout(r,200));return MOCK_BOOKS[tid]??{bids:[],asks:[]};}
   const res=await fetch('https://clob.polymarket.com/book?token_id='+tid);
-  if(!res.ok)throw new Error('CLOB '+res.status);
+  if(!res.ok)throw new Error('CLOB error: '+res.status);
   const d=await res.json();
   return{
     bids:(d.bids??[]).map(b=>({price:parseFloat(b.price),size:parseFloat(b.size)})),
@@ -370,148 +248,96 @@ async function fetchBook(tid){
   };
 }
 
-// ═══ COMPONENTS ══════════════════════════════════════════════
-
-// FIX 3: Always 5 dots, grey empty slots
+// ── Components ────────────────────────────────
 function Dots5({level}){
   return<div className="dots5">
     {[1,2,3,4,5].map(i=><div key={i} className={`d5 ${i<=level?'on':'off'}`}/>)}
   </div>;
 }
-
-// FIX 2: Bids LEFT (green), asks RIGHT (red), volume-proportional bars, stake marker
 function MiniOB({bids,asks,stakeLevel}){
   if(!bids.length&&!asks.length)return<span style={{fontSize:10,color:'var(--hint)'}}>—</span>;
-
-  // volume-proportional widths — max 3 bars each side
-  const topBids=bids.slice(0,3);
-  const topAsks=asks.slice(0,3);
-  const allVols=[...topBids,...topAsks].map(l=>l.size*l.price);
-  const mx=Math.max(...allVols,0.01);
-  const barW=l=>Math.max(4,Math.round((l.size*l.price/mx)*22));
-
+  const topBids=bids.slice(0,3),topAsks=asks.slice(0,3);
+  const allV=[...topBids,...topAsks].map(l=>l.size*l.price);
+  const mx=Math.max(...allV,.01);
+  const bw=l=>Math.max(4,Math.round((l.size*l.price/mx)*22));
   return<div className="ob-cell">
-    {/* Bids — LEFT — green */}
     <div className="ob-bids">
       {[...topBids].reverse().map((l,i)=>{
-        const isStake=i===topBids.length-1-stakeLevel;
-        return<div key={i} className="ob-stake-wrap" title={`Bid ${(l.price*100).toFixed(1)}¢ × ${l.size.toFixed(0)}д`}>
-          {isStake&&<div className="ob-stake-marker"/>}
-          <div className="ob-seg bid" style={{width:barW(l)+'px'}}/>
+        const isSt=i===topBids.length-1-stakeLevel;
+        return<div key={i} className="ob-stake-wrap" title={`Bid ${(l.price*100).toFixed(1)}¢`}>
+          {isSt&&<div className="ob-stake-marker"/>}
+          <div className="ob-seg bid" style={{width:bw(l)+'px'}}/>
         </div>;
       })}
     </div>
     <div className="ob-mid"/>
-    {/* Asks — RIGHT — red */}
     <div className="ob-asks">
-      {topAsks.map((l,i)=>(
-        <div key={i} className="ob-seg ask" style={{width:barW(l)+'px'}}
-          title={`Ask ${(l.price*100).toFixed(1)}¢ × ${l.size.toFixed(0)}д`}/>
-      ))}
+      {topAsks.map((l,i)=><div key={i} className="ob-seg ask" style={{width:bw(l)+'px'}} title={`Ask ${(l.price*100).toFixed(1)}¢`}/>)}
     </div>
   </div>;
 }
-
-// TABLE ROW
 function TableRow({m}){
-  const catLabel=CAT[(m.category??'').toLowerCase()]??m.category??'Прочее';
+  const cat=getCategory(m);
+  const catLabel=CAT[cat.toLowerCase()]??'Прочее';
   const chipCls=m.analysis.pct>=19?'chip g':'chip a';
   return<tr>
-    {/* FIX 1: 2-line question with category pill */}
-    <td>
-      <div className="q-cell-wrap">
-        <span className="cat-pill">{catLabel}</span>
-        <span className="q-text" title={m.question}>{m.question}</span>
-      </div>
-    </td>
-    <td><span className="mono g">${m.dailyReward.toFixed(0)}/д</span></td>
-    <td><span className="mono">{m.maxSpread.toFixed(1)}¢</span></td>
-    <td><span className="mono">{m.minSize}</span></td>
-    {/* FIX 3: 5-slot competition */}
-    <td><Dots5 level={m.competitionLevel}/></td>
-    {/* FIX 2: corrected order book */}
+    <td><div className="q-cell-wrap">
+      <span className="cat-pill">{catLabel}</span>
+      <span className="q-text" title={m.question}>{m.question}</span>
+    </div></td>
+    <td><span className="mono g">${getDailyReward(m).toFixed(0)}/д</span></td>
+    <td><span className="mono">{getMaxSpread(m).toFixed(1)}¢</span></td>
+    <td><span className="mono">{getMinSize(m)}</span></td>
+    <td><Dots5 level={m._compLevel}/></td>
     <td><MiniOB bids={m.analysis.bids} asks={m.analysis.asks} stakeLevel={m.analysis.stakeLevel}/></td>
     <td style={{textAlign:'right'}}><span className={chipCls}>{m.analysis.pct.toFixed(0)}%</span></td>
     <td style={{textAlign:'right'}}>
-      <a className="open-btn-sm" href={m.marketUrl} target="_blank" rel="noopener noreferrer">Открыть ↗</a>
+      <a className="open-btn-sm" href={buildUrl(m)} target="_blank" rel="noopener noreferrer">Открыть ↗</a>
     </td>
   </tr>;
 }
-
-// IMPROVED CARD
 function MiniCard({m}){
   const [obOpen,setObOpen]=useState(false);
-  const catLabel=CAT[(m.category??'').toLowerCase()]??m.category??'Прочее';
+  const cat=getCategory(m);
+  const catLabel=CAT[cat.toLowerCase()]??'Прочее';
   const isBest=m.analysis.pct>=19;
-  const shareNumCls=isBest?'mc-share-num g':'mc-share-num a';
   const a=m.analysis;
   const allV=[...a.bids,...a.asks].map(l=>l.size*l.price);
   const mx=Math.max(...allV,.01);
   const bw=l=>Math.max(5,Math.min(80,(l.size*l.price/mx)*80));
   const fmt=n=>n<.01?n.toFixed(4):n<1?n.toFixed(3):n.toFixed(2);
-  const endDate=new Date(m.endDate);
-  const dateStr=endDate.toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
-
+  const ms=getMinSize(m);
+  const dr=getDailyReward(m);
+  const endDate=new Date(m.endDate??m.end_date_iso??'');
+  const dateStr=isNaN(endDate)?'—':endDate.toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
   return<div className={`mcard ${isBest?'best':''}`}>
-    {/* Top accent line for best markets */}
     <div className="mc-accent"/>
-
-    {/* Header: category + share badge */}
     <div className="mc-head">
       <span className="cat-pill">{catLabel}</span>
-      <span style={{fontSize:10,color:isBest?'var(--green-dark)':'#d97706',fontWeight:600,fontFamily:'var(--mono)'}}>
-        {m.minSize}д min
-      </span>
+      <span style={{fontSize:10,color:isBest?'var(--green-dark)':'#d97706',fontWeight:600,fontFamily:'var(--mono)'}}>{ms}д min</span>
     </div>
-
-    {/* Question — 3 lines max, full readable */}
     <div className="mc-q" title={m.question}>{m.question}</div>
-
-    {/* Hero block: reward (left) + share% (right) */}
     <div className="mc-reward-hero">
       <div>
         <div className="mc-reward-label">Награда в день</div>
-        <div className="mc-reward-val">${m.dailyReward.toFixed(0)}</div>
+        <div className="mc-reward-val">${dr.toFixed(0)}</div>
       </div>
       <div className="mc-share-big">
-        <div className={shareNumCls}>{a.pct.toFixed(0)}%</div>
+        <div className={`mc-share-num ${isBest?'g':'a'}`}>{a.pct.toFixed(0)}%</div>
         <div className="mc-share-label">доля в стакане</div>
       </div>
     </div>
-
-    {/* 2-column stats grid */}
     <div className="mc-grid">
-      <div className="mc-cell">
-        <div className="mc-k">Спред</div>
-        <div className="mc-v">{m.maxSpread.toFixed(1)}¢</div>
-      </div>
-      <div className="mc-cell">
-        <div className="mc-k">Лучший bid</div>
-        <div className="mc-v">{(a.bestBidPrice*100).toFixed(1)}¢</div>
-      </div>
-      <div className="mc-cell">
-        <div className="mc-k">Наша ставка</div>
-        <div className="mc-v">${a.ourStakeUSD.toFixed(2)}</div>
-      </div>
-      <div className="mc-cell">
-        <div className="mc-k">Закрытие</div>
-        <div className="mc-v date">{dateStr}</div>
-      </div>
+      <div className="mc-cell"><div className="mc-k">Спред</div><div className="mc-v">{getMaxSpread(m).toFixed(1)}¢</div></div>
+      <div className="mc-cell"><div className="mc-k">Лучший bid</div><div className="mc-v">{(a.bestBidPrice*100).toFixed(1)}¢</div></div>
+      <div className="mc-cell"><div className="mc-k">Наша ставка</div><div className="mc-v">${a.ourStakeUSD.toFixed(2)}</div></div>
+      <div className="mc-cell"><div className="mc-k">Закрытие</div><div className="mc-v date">{dateStr}</div></div>
     </div>
-
-    {/* Competition */}
     <div className="mc-sep"/>
-    <div className="mc-comp">
-      <Dots5 level={m.competitionLevel}/>
-      <span className="comp-lbl">{COMP_LABELS[m.competitionLevel]}</span>
-    </div>
-
-    {/* Collapsible order book */}
+    <div className="mc-comp"><Dots5 level={m._compLevel}/><span className="comp-lbl">{COMP[m._compLevel]}</span></div>
     {a.bids.length>0&&<>
       <div className="mc-ob-toggle" onClick={()=>setObOpen(o=>!o)}>
-        <span className="mc-ob-toggle-label">
-          📊 Стакан заявок
-        </span>
+        <span className="mc-ob-toggle-label">📊 Стакан заявок</span>
         <span className={`mc-ob-toggle-arrow ${obOpen?'open':''}`}>▼</span>
       </div>
       {obOpen&&<div className="mc-ob-body">
@@ -521,7 +347,7 @@ function MiniCard({m}){
           <span className="mc-ob-sz">{l.size.toFixed(0)}д</span>
         </div>)}
         <div className="mc-ob-sep"><div className="mc-ob-line"/><span className="mc-ob-spread">спред {(a.spread*100).toFixed(1)}¢</span><div className="mc-ob-line"/></div>
-        <div className="mc-stake">▶ Наша ставка: {m.minSize}д (${a.ourStakeUSD.toFixed(2)}) — {a.pct.toFixed(0)}% уровня</div>
+        <div className="mc-stake">▶ Наша ставка: {ms}д (${a.ourStakeUSD.toFixed(2)}) — {a.pct.toFixed(0)}% уровня</div>
         {a.bids.slice(0,3).map((l,i)=><div key={i} className="mc-ob-row">
           <span className="mc-ob-price b">{fmt(l.price)}</span>
           <div className="mc-ob-bar bid" style={{width:bw(l)+'px'}}/>
@@ -529,16 +355,11 @@ function MiniCard({m}){
         </div>)}
       </div>}
     </>}
-
-    {/* CTA */}
     <div className="mc-footer" style={{marginTop:'auto'}}>
-      <a className="open-btn-full" href={m.marketUrl} target="_blank" rel="noopener noreferrer">
-        Открыть рынок ↗
-      </a>
+      <a className="open-btn-full" href={buildUrl(m)} target="_blank" rel="noopener noreferrer">Открыть рынок ↗</a>
     </div>
   </div>;
 }
-
 function SkeletonTable(){
   return<div className="tbl-wrap"><table><colgroup>
     <col className="c-market"/><col className="c-reward"/><col className="c-spread"/>
@@ -559,17 +380,14 @@ function SkeletonCards(){
       <div className="skel" style={{height:14,width:'80%',marginBottom:12}}/>
       <div className="skel" style={{height:56,borderRadius:6,marginBottom:10}}/>
       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:10}}>
-        <div className="skel" style={{height:36,borderRadius:4}}/>
-        <div className="skel" style={{height:36,borderRadius:4}}/>
-        <div className="skel" style={{height:36,borderRadius:4}}/>
-        <div className="skel" style={{height:36,borderRadius:4}}/>
+        {[0,1,2,3].map(k=><div key={k} className="skel" style={{height:36,borderRadius:4}}/>)}
       </div>
       <div className="skel" style={{height:38,borderRadius:6}}/>
     </div>)}
   </div>;
 }
 
-// ═══ APP ═════════════════════════════════════════════════════
+// ── App ───────────────────────────────────────
 function App(){
   const [filters,setFilters]=useState({sizes:[20,40,50],reward:30,spread:5});
   const [mode,setMode]=useState('table');
@@ -583,8 +401,11 @@ function App(){
   const refT=useRef(null),bookT=useRef(null);
 
   const loadMarkets=useCallback(async()=>{
-    try{setError(null);const d=await fetchMarkets();setRaw(d);}
-    catch(e){setError(e.message);}
+    try{
+      setError(null);
+      const d=await fetchMarkets();
+      setRaw(d);
+    }catch(e){setError(e.message);}
     finally{setLoading(false);}
   },[]);
 
@@ -597,19 +418,14 @@ function App(){
   const loadBooks=useCallback(async(markets)=>{
     if(!markets.length)return;
     setRefetching(true);
-    await Promise.allSettled(markets.slice(0,15).map(async m=>{
-      // Real API: tokens may be in clobTokenIds (JSON string) instead of tokens array
-      let tokens=m.tokens??[];
-      if(!tokens.length&&m.clobTokenIds){
-        try{
-          const ids=JSON.parse(m.clobTokenIds);
-          tokens=[{tokenId:ids[0],outcome:'Yes',price:parseFloat(m.outcomePrices?JSON.parse(m.outcomePrices)[0]:0.5)},
-                  {tokenId:ids[1],outcome:'No', price:parseFloat(m.outcomePrices?JSON.parse(m.outcomePrices)[1]:0.5)}];
-        }catch{}
-      }
+    await Promise.allSettled(markets.slice(0,20).map(async m=>{
+      const tokens=getTokens(m);
       const tok=tokens.find(t=>t.outcome?.toLowerCase()==='yes')??tokens[0];
-      if(!tok)return;
-      try{const b=await fetchBook(tok.tokenId);setBooks(p=>({...p,[tok.tokenId]:b}));}catch{}
+      if(!tok?.tokenId)return;
+      try{
+        const b=await fetchBook(tok.tokenId);
+        setBooks(p=>({...p,[tok.tokenId]:b}));
+      }catch{}
     }));
     setRefetching(false);
   },[]);
@@ -624,50 +440,36 @@ function App(){
 
   const processed=useMemo(()=>{
     return rawMarkets.filter(m=>eligible(m,filters)).map(m=>{
-      // Real API: tokens may be in clobTokenIds (JSON string) instead of tokens array
-      let tokens=m.tokens??[];
-      if(!tokens.length&&m.clobTokenIds){
-        try{
-          const ids=JSON.parse(m.clobTokenIds);
-          tokens=[{tokenId:ids[0],outcome:'Yes',price:parseFloat(m.outcomePrices?JSON.parse(m.outcomePrices)[0]:0.5)},
-                  {tokenId:ids[1],outcome:'No', price:parseFloat(m.outcomePrices?JSON.parse(m.outcomePrices)[1]:0.5)}];
-        }catch{}
-      }
+      const tokens=getTokens(m);
       const tok=tokens.find(t=>t.outcome?.toLowerCase()==='yes')??tokens[0];
-      if(!tok)return null;
+      if(!tok?.tokenId)return null;
       const book=books[tok.tokenId]??{bids:[],asks:[]};
-      const analysis=analyzeBook(tok.tokenId,book,m.rewards?.minSize??20);
-      if(Object.keys(books).length>0&&!analysis.ok)return null;
-      // _eventSlug = parent event slug, m.slug = market slug
-      // If eventSlug == marketSlug (simple market), use single segment URL
-      const marketUrl=m._eventSlug && m._eventSlug!==m.slug
-        ? 'https://polymarket.com/event/'+m._eventSlug+'/'+m.slug
-        : 'https://polymarket.com/event/'+(m._eventSlug??m.slug);
-      return{conditionId:m.conditionId,slug:m.slug,question:m.question,
-        category:m.category??'other',endDate:m.endDate,
-        minSize:m.rewards?.minSize??m.rewardsMinSize,
-        maxSpread:m.rewards?.maxSpread??m.rewardsMaxSpread,
-        dailyReward:dailyReward(m),competitionLevel:compLevel(m),
-        marketUrl,
-        primaryTokenId:tok.tokenId,analysis};
+      const analysis=analyzeBook(tok.tokenId,book,getMinSize(m));
+      const booksLoaded=Object.keys(books).length>0;
+      if(booksLoaded&&!analysis.ok)return null;
+      return{...m,_compLevel:compLevel(m),analysis};
     }).filter(Boolean);
   },[rawMarkets,books,filters]);
 
   const sorted=useMemo(()=>{
-    const fn={reward:m=>m.dailyReward,spread:m=>-m.maxSpread,
-      minSize:m=>m.minSize,comp:m=>-m.competitionLevel,pct:m=>m.analysis.pct};
+    const fn={
+      reward:m=>getDailyReward(m),
+      spread:m=>-getMaxSpread(m),
+      minSize:m=>getMinSize(m),
+      comp:m=>-m._compLevel,
+      pct:m=>m.analysis.pct,
+    };
     const f=fn[sortKey]??(m=>m.analysis.pct);
     return[...processed].sort((a,b)=>sortDir*(f(b)-f(a)));
   },[processed,sortKey,sortDir]);
 
-  const toggleSort=key=>{
-    if(sortKey===key)setSortDir(d=>-d);
-    else{setSortKey(key);setSortDir(-1);}
+  const toggleSort=k=>{
+    if(sortKey===k)setSortDir(d=>-d);
+    else{setSortKey(k);setSortDir(-1);}
   };
   const arr=k=>sortKey===k?(sortDir===-1?'↓':'↑'):'↕';
 
   return<div className="app">
-    {/* Header */}
     <div className="hdr">
       <div className="hdr-left">
         <div className="logo">
@@ -681,10 +483,9 @@ function App(){
           <div className="app-sub">Сканер рынков для ликвидити-провайдеров</div>
         </div>
       </div>
-      <div className="live-pill"><div className="live-dot"/>{USE_MOCK?'🧪 Мок-данные':'Live · 30с'}</div>
+      <div className="live-pill"><div className="live-dot"/>Live · 30с</div>
     </div>
 
-    {/* Filters */}
     <div className="fp">
       <div className="fp-row">
         <div className="fp-group">
@@ -718,19 +519,16 @@ function App(){
           </div>
         </div>
         <div className="fp-right">
-          <div className={`count-txt ${sorted.length===0&&!loading?'zero':''}`}>
-            Найдено: <strong>{loading?'…':sorted.length}</strong> из {rawMarkets.length}
-          </div>
-          {refetching&&<div className="upd"><div className="spin"/>Обновление...</div>}
+          <div className="count-txt">Найдено: <strong>{loading?'…':sorted.length}</strong> из {rawMarkets.length}</div>
+          {refetching&&<div className="upd"><div className="spin"/>Обновление стакана...</div>}
         </div>
       </div>
     </div>
 
-    {/* Mode switcher */}
     {!loading&&!error&&<div className="mode-bar">
       <button className={`mode-btn ${mode==='table'?'on':''}`} onClick={()=>setMode('table')}>☰ Таблица</button>
       <button className={`mode-btn ${mode==='cards'?'on':''}`} onClick={()=>setMode('cards')}>⊞ Карточки</button>
-      {mode==='table'&&<span className="sort-hint">Кликни заголовок столбца для сортировки</span>}
+      {mode==='table'&&<span className="sort-hint">Кликни заголовок для сортировки</span>}
     </div>}
 
     {loading&&(mode==='table'?<SkeletonTable/>:<SkeletonCards/>)}
@@ -738,17 +536,23 @@ function App(){
     {!loading&&error&&<div className="state-box">
       <div className="state-icon">⚠️</div>
       <div className="state-title">Не удалось загрузить данные</div>
-      <div className="state-sub">Проверьте подключение к интернету и попробуйте снова.</div>
+      <div className="state-sub">{error}<br/><br/>Проверьте подключение к интернету и попробуйте снова.</div>
       <button className="retry-btn" onClick={()=>{setLoading(true);loadMarkets();}}>Повторить попытку</button>
     </div>}
 
-    {!loading&&!error&&sorted.length===0&&<div className="state-box">
+    {!loading&&!error&&sorted.length===0&&rawMarkets.length>0&&<div className="state-box">
       <div className="state-icon">🔍</div>
       <div className="state-title">Рынки не найдены</div>
-      <div className="state-sub">Попробуйте снизить планку суточной награды или выбрать другой размер ставки.</div>
+      <div className="state-sub">Загружено {rawMarkets.length} рынков, но ни один не прошёл фильтры. Попробуйте снизить минимальную награду или увеличить допустимый спред.</div>
     </div>}
 
-    {/* TABLE */}
+    {!loading&&!error&&rawMarkets.length===0&&<div className="state-box">
+      <div className="state-icon">📭</div>
+      <div className="state-title">Рынки не загружены</div>
+      <div className="state-sub">API вернул пустой список. Попробуйте обновить страницу через несколько секунд.</div>
+      <button className="retry-btn" onClick={()=>{setLoading(true);loadMarkets();}}>Обновить</button>
+    </div>}
+
     {!loading&&!error&&sorted.length>0&&mode==='table'&&<div className="tbl-wrap">
       <table>
         <colgroup>
@@ -762,17 +566,16 @@ function App(){
           <th onClick={()=>toggleSort('spread')}>Спред <span className={`sort-arrow ${sortKey==='spread'?'on':''}`}>{arr('spread')}</span></th>
           <th onClick={()=>toggleSort('minSize')}>Min <span className={`sort-arrow ${sortKey==='minSize'?'on':''}`}>{arr('minSize')}</span></th>
           <th onClick={()=>toggleSort('comp')}>Конк. <span className={`sort-arrow ${sortKey==='comp'?'on':''}`}>{arr('comp')}</span></th>
-          <th title="Зелёный=Bid(покупка), Красный=Ask(продажа). ▲ = наша ставка">Стакан <span style={{fontSize:9,opacity:.5}}>bid|ask</span></th>
+          <th>Стакан <span style={{fontSize:9,opacity:.5}}>bid|ask</span></th>
           <th className="r" onClick={()=>toggleSort('pct')}>Доля <span className={`sort-arrow ${sortKey==='pct'?'on':''}`}>{arr('pct')}</span></th>
           <th className="r"/>
         </tr></thead>
-        <tbody>{sorted.map(m=><TableRow key={m.conditionId} m={m}/>)}</tbody>
+        <tbody>{sorted.map(m=><TableRow key={m.conditionId??m.id??m.slug} m={m}/>)}</tbody>
       </table>
     </div>}
 
-    {/* CARDS */}
     {!loading&&!error&&sorted.length>0&&mode==='cards'&&<div className="cards-grid">
-      {sorted.map(m=><MiniCard key={m.conditionId} m={m}/>)}
+      {sorted.map(m=><MiniCard key={m.conditionId??m.id??m.slug} m={m}/>)}
     </div>}
   </div>;
 }
