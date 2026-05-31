@@ -215,23 +215,24 @@ function buildUrl(m){
 
 // ── API ───────────────────────────────────────
 async function fetchMarkets(){
-  // Fetch markets with rewardsMinSize=1 to get ALL reward markets
-  // Then filter client-side to minSize 20, 40, or 50
-  // Fetch 500 markets sorted by reward rate to find high-reward ones first
-  const res=await fetch(
-    'https://gamma-api.polymarket.com/markets?active=true&closed=false&limit=500&rewardsMinSize=1'
-  );
-  if(!res.ok)throw new Error('API error: HTTP '+res.status);
-  const data=await res.json();
-  if(!Array.isArray(data))throw new Error('Неожиданный формат ответа');
-  return data.map(m=>{
-    const ev=m.events?.[0];
-    return{
-      ...m,
-      _eventSlug:ev?.slug??m.slug,
-      _tags:ev?.tags??[],
-      liquidityNum:parseFloat(m.liquidity??m.liquidityNum??0),
-    };
+  var PAGE=100, offset=0, all=[], done=false;
+  while(!done){
+    var url='https://gamma-api.polymarket.com/markets?active=true&closed=false&rewardsMinSize=1&limit='+PAGE+'&offset='+offset;
+    var res=await fetch(url);
+    if(!res.ok) throw new Error('API error: HTTP '+res.status);
+    var page=await res.json();
+    if(!Array.isArray(page)||page.length===0){done=true;break;}
+    all=all.concat(page);
+    if(page.length<PAGE){done=true;}else{offset+=PAGE;}
+    if(all.length>=5000){done=true;}
+  }
+  return all.map(function(m){
+    var ev=m.events&&m.events[0];
+    return Object.assign({},m,{
+      _eventSlug:ev?ev.slug:m.slug,
+      _tags:ev&&ev.tags?ev.tags:[],
+      liquidityNum:parseFloat(m.liquidity||m.liquidityNum||0),
+    });
   });
 }
 
@@ -410,7 +411,7 @@ function App(){
       setError(null);
       setLoadMsg('Загрузка рынков...');
       const d=await fetchMarkets();
-      setLoadMsg(`Загружено ${d.length} рынков`);
+      setLoadMsg('Загружено ' + d.length + ' рынков');
       setRaw(d);
     }catch(e){setError(e.message);}
     finally{setLoading(false);}
