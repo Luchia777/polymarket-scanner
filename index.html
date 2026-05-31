@@ -147,7 +147,7 @@ tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 const {useState,useEffect,useCallback,useRef,useMemo}=React;
 
 const EXCL=['politics','middle-east','геополитика','iran','ближний восток','government'];
-const ALLOWED=[3,5,10,20,25,40,50,100,150,200,250,500,1000];
+const ALLOWED=[20,40,50];
 const CAT={crypto:'Крипто',cryptocurrency:'Крипто',sports:'Спорт',sport:'Спорт',
   esports:'Киберспорт',finance:'Финансы',science:'Наука',culture:'Культура',
   technology:'Технологии','fed-rates':'Финансы',economy:'Финансы',other:'Прочее'};
@@ -160,14 +160,11 @@ function getMaxSpread(m){
   return m.rewardsMaxSpread??m.rewards?.maxSpread??99;
 }
 function getDailyReward(m){
-  // "Вознаграждения" column on Polymarket = sum of clobRewards[].rewardsAmount
-  // This is the USDC pool amount shown in the rewards tab
+  // "Вознаграждения" column on Polymarket rewards tab = clobRewards[].rewardsDailyRate
+  // This is the daily USDC reward for liquidity providers
   if(m.clobRewards?.length){
-    const byAmount=m.clobRewards.reduce((s,r)=>s+(r.rewardsAmount??0),0);
-    const byRate=m.clobRewards.reduce((s,r)=>s+(r.rewardsDailyRate??0),0);
-    // Use whichever is non-zero and larger (rewardsAmount = pool, rewardsDailyRate = daily)
-    const val=byAmount>byRate?byAmount:byRate;
-    if(val>0)return val;
+    const total=m.clobRewards.reduce((s,r)=>s+(r.rewardsDailyRate??0),0);
+    if(total>0)return total;
   }
   // Fallback for mock data
   if(m.rewards?.rates?.length)return m.rewards.rates.reduce((s,r)=>s+(r.rewardsDailyRate??0),0);
@@ -191,14 +188,16 @@ function eligible(m,f){
   const ms=getMinSize(m);
   if(!ms||ms<=0)return false;
   // Filter by selected minSize brackets
-  const bracket=ms<=50?20:ms<=250?40:50;
+  // rewardsMinSize must be exactly 20, 40, or 50
+  const bracket=ms;
   if(!f.sizes.includes(bracket))return false;
   // Daily reward filter (in USDC)
-  if(getDailyReward(m)<f.reward)return false;
+  // Reward filter: only apply if threshold > 1
+  if(f.reward>1&&getDailyReward(m)<f.reward)return false;
   // Spread filter (rewardsMaxSpread is in cents: 3.5 = 3.5¢)
   if(getMaxSpread(m)>=f.spread)return false;
   // Competition: use liquidity as proxy
-  if(compLevel(m)>2)return false;
+  // compLevel filter removed — applied separately via order book analysis
   return true;
 }
 function analyzeBook(tokenId,book,minSize){
@@ -406,7 +405,7 @@ function SkeletonCards(){
 
 // ── App ───────────────────────────────────────
 function App(){
-  const [filters,setFilters]=useState({sizes:[20,40,50],reward:30,spread:5});
+  const [filters,setFilters]=useState({sizes:[20,40,50],reward:1,spread:5});
   const [mode,setMode]=useState('table');
   const [sortKey,setSortKey]=useState('pct');
   const [sortDir,setSortDir]=useState(-1);
@@ -506,24 +505,24 @@ function App(){
     <div className="fp">
       <div className="fp-row">
         <div className="fp-group">
-          <div className="fp-label">Мин. доли</div>
+          <div className="fp-label">Мин. размер ставки</div>
           <div className="btn-grp">
-            {[[20,'≤50'],[40,'51-250'],[50,'251+']].map(([sz,lbl])=><button key={sz}
+            {[20,40,50].map(sz=><button key={sz}
               className={`tog ${filters.sizes.includes(sz)?'on':''}`}
               onClick={()=>setFilters(f=>{
                 const has=f.sizes.includes(sz);
                 const next=has?f.sizes.filter(s=>s!==sz):[...f.sizes,sz];
                 return{...f,sizes:next.length?next:f.sizes};
-              })}>{lbl}</button>)}
+              })}>{sz}</button>)}
           </div>
         </div>
         <div className="fp-div"/>
         <div className="fp-group">
           <div className="fp-label">Мин. награда в день</div>
           <div className="sld-row">
-            <input type="range" min={1} max={500} step={1} value={filters.reward}
+            <input type="range" min={1} max={100} step={1} value={filters.reward}
               onChange={e=>setFilters(f=>({...f,reward:+e.target.value}))}/>
-            <span className="sld-val">≥ {(+filters.reward).toFixed(0)} монет</span>
+            <span className="sld-val">≥ {filters.reward}/д</span>
           </div>
         </div>
         <div className="fp-div"/>
