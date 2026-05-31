@@ -17,8 +17,7 @@
   --amber-bg:#fef3c7;--amber-text:#92400e;
   --red:#ef4444;--slate:#0f172a;--blue:#4f46e5;
   --font:'DM Sans',sans-serif;--mono:'JetBrains Mono',monospace;
-  --r:10px;--r-sm:7px;
-  --shadow:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.04);
+  --r:10px;--r-sm:7px;--shadow:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.04);
 }
 html{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
 body{min-height:100vh}
@@ -37,18 +36,16 @@ body{min-height:100vh}
 .fp-group{display:flex;flex-direction:column;gap:6px}
 .fp-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--hint)}
 .btn-grp{display:flex;gap:4px}
-.tog{min-width:46px;min-height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:13px;font-weight:600;cursor:pointer;background:var(--card);color:var(--muted);font-family:var(--font);transition:all .12s}
+.tog{min-width:48px;min-height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:14px;font-weight:700;cursor:pointer;background:var(--card);color:var(--muted);font-family:var(--font);transition:all .12s}
 .tog.on{background:var(--slate);color:#fff;border-color:var(--slate)}
 .tog:hover:not(.on){border-color:#94a3b8}
 .sld-row{display:flex;align-items:center;gap:12px}
-.sld-val{font-size:13px;font-weight:700;color:var(--text);font-family:var(--mono);min-width:64px}
+.sld-val{font-size:13px;font-weight:700;color:var(--text);font-family:var(--mono);min-width:56px}
 input[type=range]{-webkit-appearance:none;appearance:none;width:150px;height:6px;border-radius:3px;background:var(--border);outline:none;cursor:pointer}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--slate);border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25);cursor:pointer}
-input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--slate);border:3px solid #fff;cursor:pointer}
 .fp-div{width:1px;height:40px;background:var(--border)}
 .fp-right{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
-.count-txt{font-size:13px;color:var(--muted)}
-.count-txt strong{color:var(--text);font-weight:700}
+.count-txt{font-size:13px;color:var(--muted)}.count-txt strong{color:var(--text);font-weight:700}
 .upd{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--hint);font-family:var(--mono)}
 .spin{width:9px;height:9px;border:1.5px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -58,28 +55,24 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .sort-hint{font-size:11px;color:var(--hint);margin-left:auto}
 .tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
 table{width:100%;border-collapse:collapse;table-layout:fixed}
-col.c-market{width:38%}col.c-reward{width:9%}col.c-spread{width:7%}col.c-min{width:6%}col.c-comp{width:9%}col.c-ob{width:11%}col.c-share{width:8%}col.c-action{width:10%}
+col.c-market{width:35%}col.c-reward{width:7%}col.c-spread{width:6%}col.c-min{width:5%}col.c-ob{width:12%}col.c-share{width:7%}col.c-action{width:10%}
 thead th{font-size:10px;font-weight:600;color:var(--hint);text-align:left;padding:10px 12px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;user-select:none;cursor:pointer;background:var(--card)}
 thead th:hover{color:var(--text)}thead th.r{text-align:right}
 .sort-arrow{margin-left:3px;font-size:9px;opacity:.4}.sort-arrow.on{opacity:1}
 tbody tr{border-bottom:.5px solid var(--border);transition:background .1s}
-tbody tr:last-child{border-bottom:none}
-tbody tr:hover{background:#f8fafc}
+tbody tr:last-child{border-bottom:none}tbody tr:hover{background:#f8fafc}
 tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 .cat-pill{font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;background:#f1f5f9;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;flex-shrink:0}
 .q-cell-wrap{display:flex;align-items:flex-start;gap:7px}
 .q-text{font-weight:500;font-size:13px;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
-.mono{font-family:var(--mono);font-size:12px}
-.g{color:var(--green-dark);font-weight:600}
+.mono{font-family:var(--mono);font-size:12px}.g{color:var(--green-dark);font-weight:600}
 .dots5{display:flex;gap:3px;align-items:center}
-.d5{width:8px;height:8px;border-radius:50%}
-.d5.on{background:var(--green)}.d5.off{background:#e2e8f0}
+.d5{width:8px;height:8px;border-radius:50%}.d5.on{background:var(--green)}.d5.off{background:#e2e8f0}
 .ob-cell{display:flex;align-items:center;gap:2px;height:20px}
 .ob-bids{display:flex;align-items:center;gap:1px;justify-content:flex-end}
 .ob-asks{display:flex;align-items:center;gap:1px}
 .ob-mid{width:1px;height:14px;background:var(--border);flex-shrink:0;margin:0 2px}
-.ob-seg{height:12px;border-radius:2px;flex-shrink:0}
-.ob-seg.bid{background:#6ee7b7}.ob-seg.ask{background:#fca5a5}
+.ob-seg{height:12px;border-radius:2px;flex-shrink:0}.ob-seg.bid{background:#6ee7b7}.ob-seg.ask{background:#fca5a5}
 .ob-stake-wrap{display:flex;flex-direction:column;align-items:center;gap:1px}
 .ob-stake-marker{width:2px;height:8px;background:var(--blue);border-radius:1px;position:relative}
 .ob-stake-marker::before{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:4px solid var(--blue)}
@@ -91,43 +84,36 @@ tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 .mcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;transition:box-shadow .15s,transform .15s}
 .mcard:hover{box-shadow:0 6px 20px rgba(0,0,0,.1);transform:translateY(-2px)}
 .mcard.best{border:2px solid var(--green)}
-.mcard.best .mc-accent{height:3px;background:var(--green);flex-shrink:0}
-.mcard:not(.best) .mc-accent{display:none}
+.mcard.best .mc-accent{height:3px;background:var(--green);flex-shrink:0}.mcard:not(.best) .mc-accent{display:none}
 .mc-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px 0}
 .mc-q{padding:6px 14px 0;font-size:14px;font-weight:600;color:var(--text);line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:42px}
 .mc-reward-hero{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;margin:8px 14px 0;background:#f0fdf8;border-radius:var(--r-sm);border:1px solid #bbf7d0}
 .mc-reward-val{font-size:22px;font-weight:700;color:var(--green-dark);font-family:var(--mono);letter-spacing:-0.5px}
 .mc-reward-label{font-size:10px;color:var(--green-dark);font-weight:600;text-transform:uppercase;letter-spacing:.06em;opacity:.8}
 .mc-share-big{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
-.mc-share-num{font-size:18px;font-weight:700;font-family:var(--mono)}
-.mc-share-num.g{color:var(--green-dark)}.mc-share-num.a{color:#d97706}
+.mc-share-num{font-size:18px;font-weight:700;font-family:var(--mono)}.mc-share-num.g{color:var(--green-dark)}.mc-share-num.a{color:#d97706}
 .mc-share-label{font-size:9px;color:var(--hint);text-align:right;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
 .mc-grid{display:grid;grid-template-columns:1fr 1fr;padding:10px 14px 4px}
 .mc-cell{display:flex;flex-direction:column;gap:2px;padding:6px 0;border-bottom:.5px solid var(--border)}
 .mc-cell:nth-child(odd){padding-right:12px;border-right:.5px solid var(--border)}
-.mc-cell:nth-child(even){padding-left:12px}
-.mc-cell:nth-last-child(-n+2){border-bottom:none}
+.mc-cell:nth-child(even){padding-left:12px}.mc-cell:nth-last-child(-n+2){border-bottom:none}
 .mc-k{font-size:10px;color:var(--hint);text-transform:uppercase;letter-spacing:.04em;font-weight:500}
-.mc-v{font-size:14px;font-weight:600;font-family:var(--mono);color:var(--text)}
-.mc-v.date{font-family:var(--font);font-size:13px;font-weight:500}
+.mc-v{font-size:14px;font-weight:600;font-family:var(--mono);color:var(--text)}.mc-v.date{font-family:var(--font);font-size:13px;font-weight:500}
 .mc-sep{height:.5px;background:var(--border);margin:4px 14px 0}
 .mc-comp{display:flex;align-items:center;gap:8px;padding:8px 14px}
 .comp-lbl{font-size:11px;font-weight:600;color:var(--green-dark)}
 .mc-ob-toggle{display:flex;align-items:center;justify-content:space-between;padding:7px 14px;cursor:pointer;user-select:none;background:#fafbfc;border-top:.5px solid var(--border)}
 .mc-ob-toggle-label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-.mc-ob-toggle-arrow{font-size:11px;color:var(--hint);transition:transform .2s}
-.mc-ob-toggle-arrow.open{transform:rotate(180deg)}
+.mc-ob-toggle-arrow{font-size:11px;color:var(--hint);transition:transform .2s}.mc-ob-toggle-arrow.open{transform:rotate(180deg)}
 .mc-ob-body{padding:8px 14px 10px;background:#fafbfc;border-top:.5px solid var(--border)}
 .mc-ob-row{display:flex;align-items:center;gap:7px;margin-bottom:3px}
 .mc-ob-price{font-size:10px;font-family:var(--mono);min-width:34px;text-align:right;font-weight:500}
 .mc-ob-price.a{color:var(--red)}.mc-ob-price.b{color:var(--green-dark)}
-.mc-ob-bar{height:9px;border-radius:2px}
-.mc-ob-bar.ask{background:#fecaca}.mc-ob-bar.bid{background:#bbf7d0}
+.mc-ob-bar{height:9px;border-radius:2px}.mc-ob-bar.ask{background:#fecaca}.mc-ob-bar.bid{background:#bbf7d0}
 .mc-ob-sz{font-size:9px;color:var(--hint);font-family:var(--mono)}
 .mc-stake{font-size:10px;font-weight:600;color:var(--blue);padding:3px 0;border-top:1.5px dashed var(--blue);border-bottom:1.5px dashed var(--blue);margin:4px 0}
 .mc-ob-sep{display:flex;align-items:center;gap:5px;padding:3px 0}
-.mc-ob-line{flex:1;height:.5px;background:var(--border)}
-.mc-ob-spread{font-size:9px;font-family:var(--mono);color:var(--hint)}
+.mc-ob-line{flex:1;height:.5px;background:var(--border)}.mc-ob-spread{font-size:9px;font-family:var(--mono);color:var(--hint)}
 .mc-footer{padding:10px 14px 12px;margin-top:auto}
 .open-btn-full{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:11px;background:var(--green);color:#fff;border-radius:var(--r-sm);font-size:14px;font-weight:600;text-decoration:none;border:none;cursor:pointer;font-family:var(--font);transition:background .12s}
 .open-btn-full:hover{background:var(--green-dark)}
@@ -136,70 +122,60 @@ tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 .skel-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;box-shadow:var(--shadow)}
 .state-box{display:flex;flex-direction:column;align-items:center;padding:60px 24px;text-align:center;gap:14px}
 .state-icon{font-size:44px}.state-title{font-size:17px;font-weight:700}
-.state-sub{font-size:13px;color:var(--muted);max-width:400px;line-height:1.6}
+.state-sub{font-size:13px;color:var(--muted);max-width:420px;line-height:1.6}
 .retry-btn{padding:9px 22px;background:var(--slate);color:#fff;border:none;border-radius:var(--r-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)}
 @media(max-width:640px){.app{padding:12px 10px}.fp-div{display:none}.fp-row{gap:12px}input[type=range]{width:110px}.cards-grid{grid-template-columns:1fr}}
 </style>
 </head>
-<body>
-<div id="root"></div>
+<body><div id="root"></div>
 <script type="text/babel">
 const {useState,useEffect,useCallback,useRef,useMemo}=React;
 
-const EXCL=['politics','middle-east','геополитика','iran','ближний восток','government'];
-const ALLOWED=[20,40,50];
-const CAT={crypto:'Крипто',cryptocurrency:'Крипто',sports:'Спорт',sport:'Спорт',
-  esports:'Киберспорт',finance:'Финансы',science:'Наука',culture:'Культура',
-  technology:'Технологии','fed-rates':'Финансы',economy:'Финансы',other:'Прочее'};
-const COMP=['','Оч. низкая','Низкая','Средняя','Высокая','Оч. высокая'];
+// ── Constants ─────────────────────────────────
+const EXCL_CATS=['politics','middle-east','iran','geopolitics'];
+const EXCL_TAGS=['politics','middle-east','iran'];
+const CAT_MAP={
+  crypto:'Крипто',cryptocurrency:'Крипто',
+  sports:'Спорт',sport:'Спорт',
+  esports:'Киберспорт',
+  finance:'Финансы','fed-rates':'Финансы',economy:'Финансы',
+  science:'Наука',culture:'Культура',technology:'Технологии',
+  'pop-culture':'Поп-культура','pop culture':'Поп-культура',
+  business:'Бизнес',
+};
+const COMP_LABELS=['','Оч. низкая','Низкая','Средняя','Высокая','Оч. высокая'];
 
-// ── Services ──────────────────────────────────
-function getMinSize(m){return m.rewardsMinSize??m.rewards?.minSize??m.orderMinSize??0}
-function getMaxSpread(m){
-  // rewardsMaxSpread is in cents already (3.5 = 3.5¢)
-  return m.rewardsMaxSpread??m.rewards?.maxSpread??99;
-}
-function getDailyReward(m){
-  // "Вознаграждения" column on Polymarket rewards tab = clobRewards[].rewardsDailyRate
-  // This is the daily USDC reward for liquidity providers
-  if(m.clobRewards?.length){
-    const total=m.clobRewards.reduce((s,r)=>s+(r.rewardsDailyRate??0),0);
-    if(total>0)return total;
-  }
-  // Fallback for mock data
-  if(m.rewards?.rates?.length)return m.rewards.rates.reduce((s,r)=>s+(r.rewardsDailyRate??0),0);
-  return 0;
-}
-function compLevel(m){const l=m.liquidity??0;return l<500?1:l<2000?2:l<8000?3:l<25000?4:5}
+// ── Helpers ───────────────────────────────────
+function getMinSize(m){return m.rewardsMinSize??m.rewards?.minSize??0}
+function getMaxSpread(m){return m.rewardsMaxSpread??m.rewards?.maxSpread??99}
+
 function getCategory(m){
-  // Real API: tags are on the event, accessible via m._tags (attached during fetch)
-  const tags=m._tags??m.events?.[0]?.tags??[];
-  if(tags.length){
-    const shown=tags.find(t=>t.forceShow&&t.slug!=='all');
-    const first=tags.find(t=>t.slug&&t.slug!=='all');
-    return shown?.slug??first?.slug??'other';
-  }
-  return m.category??'other';
+  // Tags on event (attached as _tags during fetch)
+  const tags=m._tags??[];
+  const shown=tags.find(t=>t.forceShow&&t.slug&&t.slug!=='all');
+  const first=tags.find(t=>t.slug&&t.slug!=='all'&&t.slug!=='all');
+  return shown?.slug??first?.slug??m.category??'other';
 }
-function eligible(m,f){
+
+function getCatLabel(m){
   const cat=getCategory(m).toLowerCase();
-  if(EXCL.some(e=>cat.includes(e)))return false;
-  // Must have rewardsMinSize defined (market has rewards program)
-  const ms=getMinSize(m);
-  if(!ms||ms<=0)return false;
-  // Filter by selected minSize brackets
-  // rewardsMinSize must be exactly 20, 40, or 50
-  const bracket=ms;
-  if(!f.sizes.includes(bracket))return false;
-  // Daily reward filter (in USDC)
-  // Reward filter: only apply if threshold > 1
-  if(f.reward>1&&getDailyReward(m)<f.reward)return false;
-  // Spread filter (rewardsMaxSpread is in cents: 3.5 = 3.5¢)
-  if(getMaxSpread(m)>=f.spread)return false;
-  // Competition: use liquidity as proxy
-  // compLevel filter removed — applied separately via order book analysis
-  return true;
+  return CAT_MAP[cat]??'Прочее';
 }
+
+function isExcluded(m){
+  const cat=getCategory(m).toLowerCase();
+  return EXCL_TAGS.some(e=>cat.includes(e));
+}
+
+function compLevel(m){
+  const liq=parseFloat(m.liquidityNum??m.liquidity??0);
+  if(liq<300)return 1;
+  if(liq<2000)return 2;
+  if(liq<10000)return 3;
+  if(liq<50000)return 4;
+  return 5;
+}
+
 function analyzeBook(tokenId,book,minSize){
   const empty={tokenId,bestBidPrice:0,bestAskPrice:0,spread:0,topBidVolume:0,ourStakeUSD:0,pct:0,hasDom:false,ok:false,bids:[],asks:[],stakeLevel:0};
   if(!book?.bids?.length||!book?.asks?.length)return empty;
@@ -215,6 +191,7 @@ function analyzeBook(tokenId,book,minSize){
     topBidVolume:vol,ourStakeUSD:stake,pct,hasDom,
     ok:vol<300&&pct>=5&&!hasDom,bids:bids.slice(0,5),asks:asks.slice(0,5),stakeLevel:0};
 }
+
 function getTokens(m){
   let tokens=m.tokens??[];
   if(!tokens.length&&m.clobTokenIds){
@@ -227,6 +204,7 @@ function getTokens(m){
   }
   return tokens;
 }
+
 function buildUrl(m){
   const evSlug=m._eventSlug??m.events?.[0]?.slug;
   const mktSlug=m.slug;
@@ -237,26 +215,29 @@ function buildUrl(m){
 
 // ── API ───────────────────────────────────────
 async function fetchMarkets(){
-  // /markets endpoint returns markets directly with events[] array inside each market
-  const url='https://gamma-api.polymarket.com/markets?active=true&closed=false&limit=100&rewardsMinSize=1';
-  const res=await fetch(url);
-  if(!res.ok)throw new Error('API error: '+res.status);
-  const markets=await res.json();
-  if(!Array.isArray(markets))throw new Error('Неожиданный формат ответа API');
-  // Attach event slug from nested events[] array
-  return markets.map(m=>{
+  // Fetch markets with rewardsMinSize=1 to get ALL reward markets
+  // Then filter client-side to minSize 20, 40, or 50
+  // Fetch 500 markets sorted by reward rate to find high-reward ones first
+  const res=await fetch(
+    'https://gamma-api.polymarket.com/markets?active=true&closed=false&limit=500&rewardsMinSize=1'
+  );
+  if(!res.ok)throw new Error('API error: HTTP '+res.status);
+  const data=await res.json();
+  if(!Array.isArray(data))throw new Error('Неожиданный формат ответа');
+  return data.map(m=>{
     const ev=m.events?.[0];
     return{
       ...m,
       _eventSlug:ev?.slug??m.slug,
       _tags:ev?.tags??[],
-      liquidity:parseFloat(m.liquidity??m.liquidityNum??0),
+      liquidityNum:parseFloat(m.liquidity??m.liquidityNum??0),
     };
   });
 }
+
 async function fetchBook(tid){
   const res=await fetch('https://clob.polymarket.com/book?token_id='+tid);
-  if(!res.ok)throw new Error('CLOB error: '+res.status);
+  if(!res.ok)throw new Error('CLOB '+res.status);
   const d=await res.json();
   return{
     bids:(d.bids??[]).map(b=>({price:parseFloat(b.price),size:parseFloat(b.size)})),
@@ -270,73 +251,75 @@ function Dots5({level}){
     {[1,2,3,4,5].map(i=><div key={i} className={`d5 ${i<=level?'on':'off'}`}/>)}
   </div>;
 }
+
 function MiniOB({bids,asks,stakeLevel}){
   if(!bids.length&&!asks.length)return<span style={{fontSize:10,color:'var(--hint)'}}>—</span>;
-  const topBids=bids.slice(0,3),topAsks=asks.slice(0,3);
-  const allV=[...topBids,...topAsks].map(l=>l.size*l.price);
-  const mx=Math.max(...allV,.01);
+  const top3b=bids.slice(0,3),top3a=asks.slice(0,3);
+  const all=[...top3b,...top3a].map(l=>l.size*l.price);
+  const mx=Math.max(...all,.01);
   const bw=l=>Math.max(4,Math.round((l.size*l.price/mx)*22));
   return<div className="ob-cell">
     <div className="ob-bids">
-      {[...topBids].reverse().map((l,i)=>{
-        const isSt=i===topBids.length-1-stakeLevel;
-        return<div key={i} className="ob-stake-wrap" title={`Bid ${(l.price*100).toFixed(1)}¢`}>
-          {isSt&&<div className="ob-stake-marker"/>}
+      {[...top3b].reverse().map((l,i)=>(
+        <div key={i} className="ob-stake-wrap">
+          {i===top3b.length-1-stakeLevel&&<div className="ob-stake-marker"/>}
           <div className="ob-seg bid" style={{width:bw(l)+'px'}}/>
-        </div>;
-      })}
+        </div>
+      ))}
     </div>
     <div className="ob-mid"/>
     <div className="ob-asks">
-      {topAsks.map((l,i)=><div key={i} className="ob-seg ask" style={{width:bw(l)+'px'}} title={`Ask ${(l.price*100).toFixed(1)}¢`}/>)}
+      {top3a.map((l,i)=><div key={i} className="ob-seg ask" style={{width:bw(l)+'px'}}/>)}
     </div>
   </div>;
 }
+
 function TableRow({m}){
-  const cat=getCategory(m);
-  const catLabel=CAT[cat.toLowerCase()]??'Прочее';
-  const chipCls=m.analysis.pct>=19?'chip g':'chip a';
+  const a=m.analysis;
+  const chipCls=a.pct>=19?'chip g':'chip a';
   return<tr>
-    <td><div className="q-cell-wrap">
-      <span className="cat-pill">{catLabel}</span>
-      <span className="q-text" title={m.question}>{m.question}</span>
-    </div></td>
-    <td><span className="mono g">${getDailyReward(m).toFixed(0)}/д</span></td>
+    <td>
+      <div className="q-cell-wrap">
+        <span className="cat-pill">{getCatLabel(m)}</span>
+        <span className="q-text" title={m.question}>{m.question}</span>
+      </div>
+    </td>
     <td><span className="mono">{getMaxSpread(m).toFixed(1)}¢</span></td>
     <td><span className="mono">{getMinSize(m)}</span></td>
-    <td><Dots5 level={m._compLevel}/></td>
-    <td><MiniOB bids={m.analysis.bids} asks={m.analysis.asks} stakeLevel={m.analysis.stakeLevel}/></td>
-    <td style={{textAlign:'right'}}><span className={chipCls}>{m.analysis.pct.toFixed(0)}%</span></td>
+    <td><span className="mono g">{getDailyReward(m).toFixed(0)}</span></td>
+    <td><span className="mono g">{getDailyReward(m).toFixed(0)}</span></td>
+    <td><span className="mono g">{getDailyReward(m).toFixed(0)}</span></td>
+    <td><span className="mono g">{getDailyReward(m).toFixed(0)}</span></td>
+    <td><MiniOB bids={a.bids} asks={a.asks} stakeLevel={a.stakeLevel}/></td>
+    <td style={{textAlign:'right'}}><span className={chipCls}>{a.pct.toFixed(0)}%</span></td>
     <td style={{textAlign:'right'}}>
       <a className="open-btn-sm" href={buildUrl(m)} target="_blank" rel="noopener noreferrer">Открыть ↗</a>
     </td>
   </tr>;
 }
+
 function MiniCard({m}){
   const [obOpen,setObOpen]=useState(false);
-  const cat=getCategory(m);
-  const catLabel=CAT[cat.toLowerCase()]??'Прочее';
-  const isBest=m.analysis.pct>=19;
   const a=m.analysis;
+  const isBest=a.pct>=19;
   const allV=[...a.bids,...a.asks].map(l=>l.size*l.price);
   const mx=Math.max(...allV,.01);
   const bw=l=>Math.max(5,Math.min(80,(l.size*l.price/mx)*80));
   const fmt=n=>n<.01?n.toFixed(4):n<1?n.toFixed(3):n.toFixed(2);
   const ms=getMinSize(m);
-  const dr=getDailyReward(m);
-  const endDate=new Date(m.endDate??m.end_date_iso??'');
+  const endDate=new Date(m.endDate??'');
   const dateStr=isNaN(endDate)?'—':endDate.toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
   return<div className={`mcard ${isBest?'best':''}`}>
     <div className="mc-accent"/>
     <div className="mc-head">
-      <span className="cat-pill">{catLabel}</span>
+      <span className="cat-pill">{getCatLabel(m)}</span>
       <span style={{fontSize:10,color:isBest?'var(--green-dark)':'#d97706',fontWeight:600,fontFamily:'var(--mono)'}}>{ms}д min</span>
     </div>
     <div className="mc-q" title={m.question}>{m.question}</div>
     <div className="mc-reward-hero">
       <div>
-        <div className="mc-reward-label">Награда в день</div>
-        <div className="mc-reward-val">${dr.toFixed(0)}</div>
+        <div className="mc-reward-label">Спред / Min доли</div>
+        <div className="mc-reward-val">{getMaxSpread(m).toFixed(1)}¢ / {ms}д</div>
       </div>
       <div className="mc-share-big">
         <div className={`mc-share-num ${isBest?'g':'a'}`}>{a.pct.toFixed(0)}%</div>
@@ -344,13 +327,13 @@ function MiniCard({m}){
       </div>
     </div>
     <div className="mc-grid">
-      <div className="mc-cell"><div className="mc-k">Спред</div><div className="mc-v">{getMaxSpread(m).toFixed(1)}¢</div></div>
       <div className="mc-cell"><div className="mc-k">Лучший bid</div><div className="mc-v">{(a.bestBidPrice*100).toFixed(1)}¢</div></div>
+      <div className="mc-cell"><div className="mc-k">Объём bid</div><div className="mc-v">${a.topBidVolume.toFixed(2)}</div></div>
       <div className="mc-cell"><div className="mc-k">Наша ставка</div><div className="mc-v">${a.ourStakeUSD.toFixed(2)}</div></div>
       <div className="mc-cell"><div className="mc-k">Закрытие</div><div className="mc-v date">{dateStr}</div></div>
     </div>
     <div className="mc-sep"/>
-    <div className="mc-comp"><Dots5 level={m._compLevel}/><span className="comp-lbl">{COMP[m._compLevel]}</span></div>
+    <div className="mc-comp"><Dots5 level={m._compLevel}/><span className="comp-lbl">{COMP_LABELS[m._compLevel]}</span></div>
     {a.bids.length>0&&<>
       <div className="mc-ob-toggle" onClick={()=>setObOpen(o=>!o)}>
         <span className="mc-ob-toggle-label">📊 Стакан заявок</span>
@@ -376,18 +359,19 @@ function MiniCard({m}){
     </div>
   </div>;
 }
+
 function SkeletonTable(){
   return<div className="tbl-wrap"><table><colgroup>
-    <col className="c-market"/><col className="c-reward"/><col className="c-spread"/>
-    <col className="c-min"/><col className="c-comp"/><col className="c-ob"/>
-    <col className="c-share"/><col className="c-action"/>
+    <col className="c-market"/><col className="c-cat"/><col className="c-spread"/>
+    <col className="c-min"/><col className="c-ob"/><col className="c-share"/><col className="c-action"/>
   </colgroup><tbody>
-    {[0,1,2,3,4,5,6].map(i=><tr key={i}>
+    {[0,1,2,3,4,5,6,7].map(i=><tr key={i}>
       <td><div className="skel" style={{height:28,borderRadius:4}}/></td>
-      {[1,2,3,4,5,6,7].map(j=><td key={j}><div className="skel" style={{height:12,width:'70%'}}/></td>)}
+      {[1,2,3,4,5,6].map(j=><td key={j}><div className="skel" style={{height:12,width:'70%'}}/></td>)}
     </tr>)}
   </tbody></table></div>;
 }
+
 function SkeletonCards(){
   return<div className="cards-grid">
     {[0,1,2,3,4,5].map(i=><div key={i} className="skel-card">
@@ -405,13 +389,18 @@ function SkeletonCards(){
 
 // ── App ───────────────────────────────────────
 function App(){
-  const [filters,setFilters]=useState({sizes:[20,40,50],reward:1,spread:5});
+  const [filters,setFilters]=useState({
+    sizes:[20,40,50],  // минимальный размер ставки: только 20, 40 или 50
+    maxSpread:5,       // макс спред в центах
+    minReward:30,      // мин. награда (число из колонки Вознаграждения на Polymarket)
+  });
   const [mode,setMode]=useState('table');
-  const [sortKey,setSortKey]=useState('pct');
+  const [sortKey,setSortKey]=useState('reward');
   const [sortDir,setSortDir]=useState(-1);
   const [rawMarkets,setRaw]=useState([]);
   const [books,setBooks]=useState({});
   const [loading,setLoading]=useState(true);
+  const [loadMsg,setLoadMsg]=useState('Загрузка рынков...');
   const [error,setError]=useState(null);
   const [refetching,setRefetching]=useState(false);
   const refT=useRef(null),bookT=useRef(null);
@@ -419,7 +408,9 @@ function App(){
   const loadMarkets=useCallback(async()=>{
     try{
       setError(null);
+      setLoadMsg('Загрузка рынков...');
       const d=await fetchMarkets();
+      setLoadMsg(`Загружено ${d.length} рынков`);
       setRaw(d);
     }catch(e){setError(e.message);}
     finally{setLoading(false);}
@@ -434,7 +425,7 @@ function App(){
   const loadBooks=useCallback(async(markets)=>{
     if(!markets.length)return;
     setRefetching(true);
-    await Promise.allSettled(markets.slice(0,20).map(async m=>{
+    await Promise.allSettled(markets.slice(0,30).map(async m=>{
       const tokens=getTokens(m);
       const tok=tokens.find(t=>t.outcome?.toLowerCase()==='yes')??tokens[0];
       if(!tok?.tokenId)return;
@@ -454,18 +445,28 @@ function App(){
     return()=>clearInterval(bookT.current);
   },[rawMarkets,loadBooks]);
 
+  // Filter: minSize must be exactly 20, 40, or 50; not excluded category; spread ok
+  const filtered=useMemo(()=>{
+    return rawMarkets.filter(m=>{
+      if(isExcluded(m))return false;
+      const ms=getMinSize(m);
+      if(!filters.sizes.includes(ms))return false;
+      if(getMaxSpread(m)>=filters.maxSpread)return false;
+      return true;
+    });
+  },[rawMarkets,filters]);
+
+  // Add order book analysis
   const processed=useMemo(()=>{
-    return rawMarkets.filter(m=>eligible(m,filters)).map(m=>{
+    return filtered.map(m=>{
       const tokens=getTokens(m);
       const tok=tokens.find(t=>t.outcome?.toLowerCase()==='yes')??tokens[0];
-      if(!tok?.tokenId)return null;
+      if(!tok?.tokenId)return{...m,_compLevel:compLevel(m),analysis:{tokenId:'',bestBidPrice:0,bestAskPrice:0,spread:0,topBidVolume:0,ourStakeUSD:0,pct:0,hasDom:false,ok:false,bids:[],asks:[],stakeLevel:0}};
       const book=books[tok.tokenId]??{bids:[],asks:[]};
       const analysis=analyzeBook(tok.tokenId,book,getMinSize(m));
-      const booksLoaded=Object.keys(books).length>0;
-      if(booksLoaded&&!analysis.ok)return null;
       return{...m,_compLevel:compLevel(m),analysis};
-    }).filter(Boolean);
-  },[rawMarkets,books,filters]);
+    });
+  },[filtered,books]);
 
   const sorted=useMemo(()=>{
     const fn={
@@ -479,10 +480,7 @@ function App(){
     return[...processed].sort((a,b)=>sortDir*(f(b)-f(a)));
   },[processed,sortKey,sortDir]);
 
-  const toggleSort=k=>{
-    if(sortKey===k)setSortDir(d=>-d);
-    else{setSortKey(k);setSortDir(-1);}
-  };
+  const toggleSort=k=>{if(sortKey===k)setSortDir(d=>-d);else{setSortKey(k);setSortDir(-1);}};
   const arr=k=>sortKey===k?(sortDir===-1?'↓':'↑'):'↕';
 
   return<div className="app">
@@ -505,7 +503,7 @@ function App(){
     <div className="fp">
       <div className="fp-row">
         <div className="fp-group">
-          <div className="fp-label">Мин. размер ставки</div>
+          <div className="fp-label">Мин. размер ставки (доли)</div>
           <div className="btn-grp">
             {[20,40,50].map(sz=><button key={sz}
               className={`tog ${filters.sizes.includes(sz)?'on':''}`}
@@ -518,24 +516,35 @@ function App(){
         </div>
         <div className="fp-div"/>
         <div className="fp-group">
-          <div className="fp-label">Мин. награда в день</div>
+          <div className="fp-label">Макс. спред</div>
           <div className="sld-row">
-            <input type="range" min={1} max={100} step={1} value={filters.reward}
-              onChange={e=>setFilters(f=>({...f,reward:+e.target.value}))}/>
-            <span className="sld-val">≥ {filters.reward}/д</span>
+            <input type="range" min={1} max={5} step={0.5} value={filters.maxSpread}
+              onChange={e=>setFilters(f=>({...f,maxSpread:+e.target.value}))}/>
+            <span className="sld-val">{'<'} {filters.maxSpread}¢</span>
           </div>
         </div>
         <div className="fp-div"/>
         <div className="fp-group">
-          <div className="fp-label">Макс. спред</div>
+          <div className="fp-label">Мин. награда</div>
           <div className="sld-row">
-            <input type="range" min={1} max={5} step={0.5} value={filters.spread}
-              onChange={e=>setFilters(f=>({...f,spread:+e.target.value}))}/>
-            <span className="sld-val">{'<'} {filters.spread}¢</span>
+            <input type="range" min={1} max={200} step={1} value={filters.minReward}
+              onChange={e=>setFilters(f=>({...f,minReward:+e.target.value}))}/>
+            <span className="sld-val">≥ {filters.minReward}</span>
+          </div>
+        </div>
+        <div className="fp-div"/>
+        <div className="fp-group">
+          <div className="fp-label">Мин. награда</div>
+          <div className="sld-row">
+            <input type="range" min={1} max={200} step={1} value={filters.minReward}
+              onChange={e=>setFilters(f=>({...f,minReward:+e.target.value}))}/>
+            <span className="sld-val">≥ {filters.minReward}</span>
           </div>
         </div>
         <div className="fp-right">
-          <div className="count-txt">Найдено: <strong>{loading?'…':sorted.length}</strong> из {rawMarkets.length}</div>
+          <div className="count-txt">
+            Найдено: <strong>{loading?'…':sorted.length}</strong> из {rawMarkets.length}
+          </div>
           {refetching&&<div className="upd"><div className="spin"/>Обновление стакана...</div>}
         </div>
       </div>
@@ -547,51 +556,49 @@ function App(){
       {mode==='table'&&<span className="sort-hint">Кликни заголовок для сортировки</span>}
     </div>}
 
+    {loading&&<div style={{textAlign:'center',padding:'20px 0 8px',fontSize:13,color:'var(--muted)',fontFamily:'var(--mono)'}}>{loadMsg}</div>}
     {loading&&(mode==='table'?<SkeletonTable/>:<SkeletonCards/>)}
 
     {!loading&&error&&<div className="state-box">
       <div className="state-icon">⚠️</div>
-      <div className="state-title">Не удалось загрузить данные</div>
-      <div className="state-sub">{error}<br/><br/>Проверьте подключение к интернету и попробуйте снова.</div>
-      <button className="retry-btn" onClick={()=>{setLoading(true);loadMarkets();}}>Повторить попытку</button>
+      <div className="state-title">Ошибка загрузки</div>
+      <div className="state-sub">{error}</div>
+      <button className="retry-btn" onClick={()=>{setLoading(true);loadMarkets();}}>Повторить</button>
     </div>}
 
-    {!loading&&!error&&sorted.length===0&&rawMarkets.length>0&&<div className="state-box">
+    {!loading&&!error&&sorted.length===0&&<div className="state-box">
       <div className="state-icon">🔍</div>
       <div className="state-title">Рынки не найдены</div>
-      <div className="state-sub">Загружено {rawMarkets.length} рынков, но ни один не прошёл фильтры. Попробуйте снизить минимальную награду или увеличить допустимый спред.</div>
-    </div>}
-
-    {!loading&&!error&&rawMarkets.length===0&&<div className="state-box">
-      <div className="state-icon">📭</div>
-      <div className="state-title">Рынки не загружены</div>
-      <div className="state-sub">API вернул пустой список. Попробуйте обновить страницу через несколько секунд.</div>
-      <button className="retry-btn" onClick={()=>{setLoading(true);loadMarkets();}}>Обновить</button>
+      <div className="state-sub">
+        Загружено {rawMarkets.length} рынков с наградами.<br/>
+        Ни один не подходит под критерии: minSize ∈ {'{20,40,50}'} и спред {'<'} {filters.maxSpread}¢.<br/><br/>
+        Попробуйте увеличить допустимый спред.
+      </div>
     </div>}
 
     {!loading&&!error&&sorted.length>0&&mode==='table'&&<div className="tbl-wrap">
       <table>
         <colgroup>
           <col className="c-market"/><col className="c-reward"/><col className="c-spread"/>
-          <col className="c-min"/><col className="c-comp"/><col className="c-ob"/>
-          <col className="c-share"/><col className="c-action"/>
+          <col className="c-min"/><col className="c-ob"/><col className="c-share"/><col className="c-action"/>
         </colgroup>
         <thead><tr>
           <th>Рынок</th>
-          <th onClick={()=>toggleSort('reward')}>Награда <span className={`sort-arrow ${sortKey==='reward'?'on':''}`}>{arr('reward')}</span></th>
           <th onClick={()=>toggleSort('spread')}>Спред <span className={`sort-arrow ${sortKey==='spread'?'on':''}`}>{arr('spread')}</span></th>
           <th onClick={()=>toggleSort('minSize')}>Min <span className={`sort-arrow ${sortKey==='minSize'?'on':''}`}>{arr('minSize')}</span></th>
-          <th onClick={()=>toggleSort('comp')}>Конк. <span className={`sort-arrow ${sortKey==='comp'?'on':''}`}>{arr('comp')}</span></th>
+          <th onClick={()=>toggleSort('reward')}>Награда <span className={`sort-arrow ${sortKey==='reward'?'on':''}`}>{arr('reward')}</span></th>
+          <th onClick={()=>toggleSort('reward')}>Нагр. <span className={`sort-arrow ${sortKey==='reward'?'on':''}`}>{arr('reward')}</span></th>
           <th>Стакан <span style={{fontSize:9,opacity:.5}}>bid|ask</span></th>
+          <th onClick={()=>toggleSort('reward')}>Нагр. <span className={`sort-arrow ${sortKey==='reward'?'on':''}`}>{arr('reward')}</span></th>
           <th className="r" onClick={()=>toggleSort('pct')}>Доля <span className={`sort-arrow ${sortKey==='pct'?'on':''}`}>{arr('pct')}</span></th>
           <th className="r"/>
         </tr></thead>
-        <tbody>{sorted.map(m=><TableRow key={m.conditionId??m.id??m.slug} m={m}/>)}</tbody>
+        <tbody>{sorted.map(m=><TableRow key={m.conditionId??m.id} m={m}/>)}</tbody>
       </table>
     </div>}
 
     {!loading&&!error&&sorted.length>0&&mode==='cards'&&<div className="cards-grid">
-      {sorted.map(m=><MiniCard key={m.conditionId??m.id??m.slug} m={m}/>)}
+      {sorted.map(m=><MiniCard key={m.conditionId??m.id} m={m}/>)}
     </div>}
   </div>;
 }
