@@ -147,36 +147,57 @@ tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 const {useState,useEffect,useCallback,useRef,useMemo}=React;
 
 const EXCL=['politics','middle-east','геополитика','iran','ближний восток','government'];
-const ALLOWED=[20,40,50];
+const ALLOWED=[3,5,10,20,25,40,50,100,150,200,250,500,1000];
 const CAT={crypto:'Крипто',cryptocurrency:'Крипто',sports:'Спорт',sport:'Спорт',
   esports:'Киберспорт',finance:'Финансы',science:'Наука',culture:'Культура',
   technology:'Технологии','fed-rates':'Финансы',economy:'Финансы',other:'Прочее'};
 const COMP=['','Оч. низкая','Низкая','Средняя','Высокая','Оч. высокая'];
 
 // ── Services ──────────────────────────────────
-function getMinSize(m){return m.rewards?.minSize??m.rewardsMinSize??m.orderMinSize??0}
-function getMaxSpread(m){return m.rewards?.maxSpread??m.rewardsMaxSpread??99}
+function getMinSize(m){return m.rewardsMinSize??m.rewards?.minSize??m.orderMinSize??0}
+function getMaxSpread(m){
+  // rewardsMaxSpread is in cents already (3.5 = 3.5¢)
+  return m.rewardsMaxSpread??m.rewards?.maxSpread??99;
+}
 function getDailyReward(m){
+  // "Вознаграждения" column on Polymarket = sum of clobRewards[].rewardsAmount
+  // This is the USDC pool amount shown in the rewards tab
+  if(m.clobRewards?.length){
+    const byAmount=m.clobRewards.reduce((s,r)=>s+(r.rewardsAmount??0),0);
+    const byRate=m.clobRewards.reduce((s,r)=>s+(r.rewardsDailyRate??0),0);
+    // Use whichever is non-zero and larger (rewardsAmount = pool, rewardsDailyRate = daily)
+    const val=byAmount>byRate?byAmount:byRate;
+    if(val>0)return val;
+  }
+  // Fallback for mock data
   if(m.rewards?.rates?.length)return m.rewards.rates.reduce((s,r)=>s+(r.rewardsDailyRate??0),0);
-  const ms=getMinSize(m);
-  return ms<=20?45:ms<=50?65:80;
+  return 0;
 }
 function compLevel(m){const l=m.liquidity??0;return l<500?1:l<2000?2:l<8000?3:l<25000?4:5}
 function getCategory(m){
-  if(m._tags?.length){
-    const shown=m._tags.find(t=>t.forceShow);
-    return shown?.slug??m._tags[0]?.slug??'other';
+  // Real API: tags are on the event, accessible via m._tags (attached during fetch)
+  const tags=m._tags??m.events?.[0]?.tags??[];
+  if(tags.length){
+    const shown=tags.find(t=>t.forceShow&&t.slug!=='all');
+    const first=tags.find(t=>t.slug&&t.slug!=='all');
+    return shown?.slug??first?.slug??'other';
   }
   return m.category??'other';
 }
 function eligible(m,f){
   const cat=getCategory(m).toLowerCase();
   if(EXCL.some(e=>cat.includes(e)))return false;
+  // Must have rewardsMinSize defined (market has rewards program)
   const ms=getMinSize(m);
-  if(!ALLOWED.includes(ms))return false;
-  if(!f.sizes.includes(ms))return false;
+  if(!ms||ms<=0)return false;
+  // Filter by selected minSize brackets
+  const bracket=ms<=50?20:ms<=250?40:50;
+  if(!f.sizes.includes(bracket))return false;
+  // Daily reward filter (in USDC)
   if(getDailyReward(m)<f.reward)return false;
+  // Spread filter (rewardsMaxSpread is in cents: 3.5 = 3.5¢)
   if(getMaxSpread(m)>=f.spread)return false;
+  // Competition: use liquidity as proxy
   if(compLevel(m)>2)return false;
   return true;
 }
@@ -208,9 +229,8 @@ function getTokens(m){
   return tokens;
 }
 function buildUrl(m){
-  // eventSlug / marketSlug — both needed for correct Polymarket URL
-  const evSlug=m._eventSlug;
-  const mktSlug=m.slug??m.market_slug;
+  const evSlug=m._eventSlug??m.events?.[0]?.slug;
+  const mktSlug=m.slug;
   if(evSlug&&mktSlug&&evSlug!==mktSlug)
     return 'https://polymarket.com/event/'+evSlug+'/'+mktSlug;
   return 'https://polymarket.com/event/'+(evSlug??mktSlug??'');
@@ -218,25 +238,22 @@ function buildUrl(m){
 
 // ── API ───────────────────────────────────────
 async function fetchMarkets(){
-  // Fetch events — each event contains nested markets array
-  const url='https://gamma-api.polymarket.com/events?active=true&closed=false&limit=100';
+  // /markets endpoint returns markets directly with events[] array inside each market
+  const url='https://gamma-api.polymarket.com/markets?active=true&closed=false&limit=100&rewardsMinSize=1';
   const res=await fetch(url);
   if(!res.ok)throw new Error('API error: '+res.status);
-  const events=await res.json();
-  if(!Array.isArray(events)||!events.length)throw new Error('Пустой ответ от API');
-  // Flatten events → markets, attach event slug and tags to each market
-  const markets=[];
-  for(const ev of events){
-    for(const mkt of (ev.markets??[])){
-      markets.push({
-        ...mkt,
-        _eventSlug:ev.slug,
-        _tags:ev.tags??[],
-        liquidity:ev.liquidity??mkt.liquidity??0,
-      });
-    }
-  }
-  return markets;
+  const markets=await res.json();
+  if(!Array.isArray(markets))throw new Error('Неожиданный формат ответа API');
+  // Attach event slug from nested events[] array
+  return markets.map(m=>{
+    const ev=m.events?.[0];
+    return{
+      ...m,
+      _eventSlug:ev?.slug??m.slug,
+      _tags:ev?.tags??[],
+      liquidity:parseFloat(m.liquidity??m.liquidityNum??0),
+    };
+  });
 }
 async function fetchBook(tid){
   const res=await fetch('https://clob.polymarket.com/book?token_id='+tid);
@@ -489,24 +506,24 @@ function App(){
     <div className="fp">
       <div className="fp-row">
         <div className="fp-group">
-          <div className="fp-label">Мин. размер ставки</div>
+          <div className="fp-label">Мин. доли</div>
           <div className="btn-grp">
-            {[20,40,50].map(sz=><button key={sz}
+            {[[20,'≤50'],[40,'51-250'],[50,'251+']].map(([sz,lbl])=><button key={sz}
               className={`tog ${filters.sizes.includes(sz)?'on':''}`}
               onClick={()=>setFilters(f=>{
                 const has=f.sizes.includes(sz);
                 const next=has?f.sizes.filter(s=>s!==sz):[...f.sizes,sz];
                 return{...f,sizes:next.length?next:f.sizes};
-              })}>{sz}</button>)}
+              })}>{lbl}</button>)}
           </div>
         </div>
         <div className="fp-div"/>
         <div className="fp-group">
           <div className="fp-label">Мин. награда в день</div>
           <div className="sld-row">
-            <input type="range" min={30} max={200} step={5} value={filters.reward}
+            <input type="range" min={1} max={500} step={1} value={filters.reward}
               onChange={e=>setFilters(f=>({...f,reward:+e.target.value}))}/>
-            <span className="sld-val">≥ ${filters.reward}</span>
+            <span className="sld-val">≥ {(+filters.reward).toFixed(0)} монет</span>
           </div>
         </div>
         <div className="fp-div"/>
