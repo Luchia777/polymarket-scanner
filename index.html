@@ -263,7 +263,7 @@ const {useState,useEffect,useCallback,useRef,useMemo}=React;
 // ═══ CONSTANTS ═══════════════════════════════════════════════
 const EXCL=['politics','middle-east','геополитика','iran','ближний восток'];
 const ALLOWED=[20,40,50];
-const USE_MOCK=false;
+const USE_MOCK=true;
 const CAT={crypto:'Крипто',cryptocurrency:'Крипто',sports:'Спорт',sport:'Спорт',
   esports:'Киберспорт',finance:'Финансы',science:'Наука',culture:'Культура',
   technology:'Технологии',other:'Прочее'};
@@ -271,16 +271,16 @@ const COMP_LABELS=['','Оч. низкая','Низкая','Средняя','Вы
 
 // ═══ MOCK DATA ════════════════════════════════════════════════
 const MOCK_MARKETS=[
-  {conditionId:'m1',slug:'btc-below-60k-june',question:'Опустится ли Bitcoin ниже $60 000 до конца июня 2025?',category:'crypto',endDate:'2025-06-30T23:59:59Z',rewards:{minSize:20,maxSpread:2.2,rates:[{rewardsDailyRate:45}]},tokens:[{tokenId:'t1',outcome:'Yes',price:.063},{tokenId:'t1n',outcome:'No',price:.937}],volume:12500,liquidity:320,active:true,closed:false},
-  {conditionId:'m2',slug:'eth-etf-approved-q2',question:'Будет ли одобрен спотовый ETH ETF в США до конца Q2 2025?',category:'crypto',endDate:'2025-06-30T23:59:59Z',rewards:{minSize:40,maxSpread:3.0,rates:[{rewardsDailyRate:62}]},tokens:[{tokenId:'t2',outcome:'Yes',price:.19},{tokenId:'t2n',outcome:'No',price:.81}],volume:45000,liquidity:1800,active:true,closed:false},
-  {conditionId:'m3',slug:'team-liquid-esl-pro-league-s21',question:'Выиграет ли Team Liquid ESL Pro League Season 21 по CS2?',category:'esports',endDate:'2025-06-15T23:59:59Z',rewards:{minSize:20,maxSpread:4.0,rates:[{rewardsDailyRate:35}]},tokens:[{tokenId:'t3',outcome:'Yes',price:.22},{tokenId:'t3n',outcome:'No',price:.78}],volume:3500,liquidity:210,active:true,closed:false},
-  {conditionId:'m4',slug:'fed-rate-cut-june-2025',question:'Снизит ли ФРС процентную ставку на заседании FOMC в июне 2025?',category:'finance',endDate:'2025-06-18T23:59:59Z',rewards:{minSize:50,maxSpread:2.0,rates:[{rewardsDailyRate:78}]},tokens:[{tokenId:'t4',outcome:'Yes',price:.41},{tokenId:'t4n',outcome:'No',price:.59}],volume:98000,liquidity:11500,active:true,closed:false},
-  {conditionId:'m5',slug:'nba-celtics-champion-2025',question:'Станут ли Boston Celtics чемпионами NBA в финале сезона 2024–25?',category:'sports',endDate:'2025-06-25T23:59:59Z',rewards:{minSize:20,maxSpread:3.5,rates:[{rewardsDailyRate:52}]},tokens:[{tokenId:'t5',outcome:'Yes',price:.34},{tokenId:'t5n',outcome:'No',price:.66}],volume:67000,liquidity:4600,active:true,closed:false},
-  {conditionId:'m6',slug:'sol-above-200-june',question:'Превысит ли цена Solana (SOL) отметку $200 до конца июня 2025?',category:'crypto',endDate:'2025-06-30T23:59:59Z',rewards:{minSize:40,maxSpread:4.5,rates:[{rewardsDailyRate:38}]},tokens:[{tokenId:'t6',outcome:'Yes',price:.28},{tokenId:'t6n',outcome:'No',price:.72}],volume:21000,liquidity:1450,active:true,closed:false},
-  {conditionId:'m7',slug:'bnb-above-600-june',question:'Превысит ли BNB отметку $600 до конца июня 2025?',category:'crypto',endDate:'2025-06-30T23:59:59Z',rewards:{minSize:20,maxSpread:3.0,rates:[{rewardsDailyRate:41}]},tokens:[{tokenId:'t7',outcome:'Yes',price:.15},{tokenId:'t7n',outcome:'No',price:.85}],volume:8400,liquidity:490,active:true,closed:false},
-  {conditionId:'m8',slug:'nhl-playoffs-oilers-2025',question:'Выйдут ли Edmonton Oilers в финал Кубка Стэнли 2025?',category:'sports',endDate:'2025-06-10T23:59:59Z',rewards:{minSize:20,maxSpread:4.0,rates:[{rewardsDailyRate:33}]},tokens:[{tokenId:'t8',outcome:'Yes',price:.44},{tokenId:'t8n',outcome:'No',price:.56}],volume:15000,liquidity:870,active:true,closed:false},
-  {conditionId:'m9',slug:'xrp-sec-case-resolved',question:'Будет ли дело SEC против Ripple (XRP) полностью закрыто до конца 2025?',category:'crypto',endDate:'2025-12-31T23:59:59Z',rewards:{minSize:40,maxSpread:2.5,rates:[{rewardsDailyRate:55}]},tokens:[{tokenId:'t9',outcome:'Yes',price:.67},{tokenId:'t9n',outcome:'No',price:.33}],volume:34000,liquidity:2100,active:true,closed:false},
-  {conditionId:'m10',slug:'dota2-ti-team-spirit',question:'Выиграет ли Team Spirit The International 2025 по Dota 2?',category:'esports',endDate:'2025-10-31T23:59:59Z',rewards:{minSize:20,maxSpread:3.5,rates:[{rewardsDailyRate:30}]},tokens:[{tokenId:'t10',outcome:'Yes',price:.09},{tokenId:'t10n',outcome:'No',price:.91}],volume:5600,liquidity:380,active:true,closed:false},
+  {conditionId:'m1',slug:'will-btc-hit-100k-in-2025',_eventSlug:'will-btc-hit-100k-in-2025',question:'Достигнет ли BTC $100,000 в 2025 году?',category:'crypto',endDate:'2025-12-31T23:59:59Z',rewards:{minSize:20,maxSpread:2.2,rates:[{rewardsDailyRate:45}]},tokens:[{tokenId:'t1',outcome:'Yes',price:.063},{tokenId:'t1n',outcome:'No',price:.937}],volume:12500,liquidity:320,active:true,closed:false},
+  {conditionId:'m2',slug:'will-ethereum-etf-launch-in-2024',_eventSlug:'will-ethereum-etf-launch-in-2024',question:'Будет ли одобрен спотовый ETH ETF в США?',category:'crypto',endDate:'2025-06-30T23:59:59Z',rewards:{minSize:40,maxSpread:3.0,rates:[{rewardsDailyRate:62}]},tokens:[{tokenId:'t2',outcome:'Yes',price:.19},{tokenId:'t2n',outcome:'No',price:.81}],volume:45000,liquidity:1800,active:true,closed:false},
+  {conditionId:'m3',slug:'cs2-major-2025-winner',_eventSlug:'cs2-major-2025-winner',question:'Кто выиграет CS2 Major 2025?',category:'esports',endDate:'2025-06-15T23:59:59Z',rewards:{minSize:20,maxSpread:4.0,rates:[{rewardsDailyRate:35}]},tokens:[{tokenId:'t3',outcome:'Yes',price:.22},{tokenId:'t3n',outcome:'No',price:.78}],volume:3500,liquidity:210,active:true,closed:false},
+  {conditionId:'m4',slug:'fed-cut-rates-2025',_eventSlug:'fed-cut-rates-2025',question:'Снизит ли ФРС ставку в 2025?',category:'finance',endDate:'2025-12-31T23:59:59Z',rewards:{minSize:50,maxSpread:2.0,rates:[{rewardsDailyRate:78}]},tokens:[{tokenId:'t4',outcome:'Yes',price:.41},{tokenId:'t4n',outcome:'No',price:.59}],volume:98000,liquidity:11500,active:true,closed:false},
+  {conditionId:'m5',slug:'nba-championship-2025',_eventSlug:'nba-championship-2025',question:'Кто выиграет NBA Championship 2025?',category:'sports',endDate:'2025-06-25T23:59:59Z',rewards:{minSize:20,maxSpread:3.5,rates:[{rewardsDailyRate:52}]},tokens:[{tokenId:'t5',outcome:'Yes',price:.34},{tokenId:'t5n',outcome:'No',price:.66}],volume:67000,liquidity:4600,active:true,closed:false},
+  {conditionId:'m6',slug:'solana-price-2025',_eventSlug:'solana-price-2025',question:'Превысит ли Solana $200 в 2025?',category:'crypto',endDate:'2025-12-31T23:59:59Z',rewards:{minSize:40,maxSpread:4.5,rates:[{rewardsDailyRate:38}]},tokens:[{tokenId:'t6',outcome:'Yes',price:.28},{tokenId:'t6n',outcome:'No',price:.72}],volume:21000,liquidity:1450,active:true,closed:false},
+  {conditionId:'m7',slug:'bnb-price-2025',_eventSlug:'bnb-price-2025',question:'Превысит ли BNB $600 в 2025?',category:'crypto',endDate:'2025-12-31T23:59:59Z',rewards:{minSize:20,maxSpread:3.0,rates:[{rewardsDailyRate:41}]},tokens:[{tokenId:'t7',outcome:'Yes',price:.15},{tokenId:'t7n',outcome:'No',price:.85}],volume:8400,liquidity:490,active:true,closed:false},
+  {conditionId:'m8',slug:'stanley-cup-2025',_eventSlug:'stanley-cup-2025',question:'Кто выиграет Кубок Стэнли 2025?',category:'sports',endDate:'2025-06-30T23:59:59Z',rewards:{minSize:20,maxSpread:4.0,rates:[{rewardsDailyRate:33}]},tokens:[{tokenId:'t8',outcome:'Yes',price:.44},{tokenId:'t8n',outcome:'No',price:.56}],volume:15000,liquidity:870,active:true,closed:false},
+  {conditionId:'m9',slug:'xrp-price-end-2025',_eventSlug:'xrp-price-end-2025',question:'Превысит ли XRP $3 к концу 2025?',category:'crypto',endDate:'2025-12-31T23:59:59Z',rewards:{minSize:40,maxSpread:2.5,rates:[{rewardsDailyRate:55}]},tokens:[{tokenId:'t9',outcome:'Yes',price:.67},{tokenId:'t9n',outcome:'No',price:.33}],volume:34000,liquidity:2100,active:true,closed:false},
+  {conditionId:'m10',slug:'dota2-ti-2025',_eventSlug:'dota2-ti-2025',question:'Кто выиграет The International 2025 по Dota 2?',category:'esports',endDate:'2025-10-31T23:59:59Z',rewards:{minSize:20,maxSpread:3.5,rates:[{rewardsDailyRate:30}]},tokens:[{tokenId:'t10',outcome:'Yes',price:.09},{tokenId:'t10n',outcome:'No',price:.91}],volume:5600,liquidity:380,active:true,closed:false},
 ];
 
 const MOCK_BOOKS={
@@ -638,10 +638,11 @@ function App(){
       const book=books[tok.tokenId]??{bids:[],asks:[]};
       const analysis=analyzeBook(tok.tokenId,book,m.rewards?.minSize??20);
       if(Object.keys(books).length>0&&!analysis.ok)return null;
-      // _eventSlug comes from parent event, m.slug is the market slug
-      const marketUrl=m._eventSlug
+      // _eventSlug = parent event slug, m.slug = market slug
+      // If eventSlug == marketSlug (simple market), use single segment URL
+      const marketUrl=m._eventSlug && m._eventSlug!==m.slug
         ? 'https://polymarket.com/event/'+m._eventSlug+'/'+m.slug
-        : 'https://polymarket.com/event/'+m.slug;
+        : 'https://polymarket.com/event/'+(m._eventSlug??m.slug);
       return{conditionId:m.conditionId,slug:m.slug,question:m.question,
         category:m.category??'other',endDate:m.endDate,
         minSize:m.rewards?.minSize??m.rewardsMinSize,
