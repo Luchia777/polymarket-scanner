@@ -179,7 +179,7 @@ function analyzeBook(tid,book,ms){
   var pct=vol>0?(stake/vol)*100:0;
   var hasDom=bids.some(function(b){return b.size*b.price>500});
   var spreadCents=(ba.price-bb.price)*100;
-  var ok=vol<300&&pct>=5&&!hasDom&&spreadCents<5;
+  var ok=vol<2000&&pct>=3&&!hasDom&&spreadCents<5;
   return{tokenId:tid,bestBidPrice:bb.price,bestAskPrice:ba.price,
     spread:ba.price-bb.price,topBidVolume:vol,ourStakeUSD:stake,pct:pct,hasDom:hasDom,
     ok:ok,bids:bids.slice(0,5),asks:asks.slice(0,5),stakeLevel:0};
