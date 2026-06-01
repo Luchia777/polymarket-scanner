@@ -477,7 +477,7 @@ function App(){
       var ms=getMs(m);
       if(ms!==20&&ms!==40&&ms!==50)return false;
       if(getSpr(m)>=5)return false;
-      if(getRew(m)<25)return false;
+      if(getRew(m)<20)return false;
       return true;
     });
   },[rawMarkets]);
@@ -508,7 +508,7 @@ function App(){
       var ms=getMs(m);
       if(ms!==20&&ms!==40&&ms!==50)return false;
       if(getSpr(m)>=5)return false;
-      if(getRew(m)<25)return false;
+      if(getRew(m)<20)return false;
       return true;
     }).map(function(m){
       var tokens=getTokens(m);
