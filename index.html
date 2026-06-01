@@ -331,7 +331,7 @@ function MiniCard(props){
     a.bids.length>0&&React.createElement('div',null,
       React.createElement('div',{className:'mcobt',onClick:function(){setObOpen(function(o){return !o})}},
         React.createElement('span',{className:'mcobl'},'Стакан заявок'),
-        React.createElement('span',{className:'mcoba'+(obOpen?' open':'')'},'▼')
+        React.createElement('span',{className:'mcoba'+(obOpen?' open':'')},'▼')
       ),
       obOpen&&React.createElement('div',{className:'mcobb'},
         a.asks.slice().reverse().slice(0,3).map(function(l,i){
