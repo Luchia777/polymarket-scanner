@@ -204,7 +204,7 @@ function buildUrl(m){
 async function fetchAllMarkets(setMsg){
   var PAGE=100,offset=0,all=[],done=false;
   while(!done){
-    var url='https://gamma-api.polymarket.com/markets?active=true&closed=false&rewardsMinSize=1&limit='+PAGE+'&offset='+offset;
+    var url='https://gamma-api.polymarket.com/markets?active=true&closed=false&limit='+PAGE+'&offset='+offset;
     var res=await fetch(url);
     if(!res.ok)throw new Error('API error: '+res.status);
     var page=await res.json();
