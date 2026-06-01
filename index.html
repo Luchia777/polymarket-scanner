@@ -204,24 +204,28 @@ function buildUrl(m){
 async function fetchAllMarkets(setMsg){
   var PAGE=100,offset=0,all=[],done=false;
   while(!done){
-    var url='https://gamma-api.polymarket.com/markets?active=true&closed=false&limit='+PAGE+'&offset='+offset;
+    var url='https://gamma-api.polymarket.com/events?active=true&closed=false&limit='+PAGE+'&offset='+offset+'&order=volume_24hr&ascending=false';
     var res=await fetch(url);
     if(!res.ok)throw new Error('API error: '+res.status);
     var page=await res.json();
     if(!Array.isArray(page)||page.length===0){done=true;break;}
-    all=all.concat(page);
-    setMsg('Загружено ' + all.length + ' рынков...');
+    // flatten: each event has nested markets[]
+    for(var i=0;i<page.length;i++){
+      var ev=page[i];
+      var mkts=ev.markets||[];
+      for(var j=0;j<mkts.length;j++){
+        all.push(Object.assign({},mkts[j],{
+          _eventSlug:ev.slug,
+          _tags:ev.tags||[],
+          liquidityNum:parseFloat(ev.liquidity||mkts[j].liquidity||0),
+        }));
+      }
+    }
+    setMsg('Загружено '+all.length+' рынков...');
     if(page.length<PAGE){done=true;}else{offset+=PAGE;}
     if(all.length>=20000){done=true;}
   }
-  return all.map(function(m){
-    var ev=m.events&&m.events[0];
-    return Object.assign({},m,{
-      _eventSlug:ev?ev.slug:m.slug,
-      _tags:ev&&ev.tags?ev.tags:[],
-      liquidityNum:parseFloat(m.liquidity||0),
-    });
-  });
+  return all;
 }
 async function fetchBook(tid){
   var res=await fetch('https://clob.polymarket.com/book?token_id='+tid);
