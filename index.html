@@ -428,35 +428,56 @@ function App(){
     return (async function(){
       if(!markets.length)return;
       setRefetching(true);
-      await Promise.allSettled(markets.slice(0,30).map(async function(m){
-        var tokens=getTokens(m);
-        var tok=tokens.find(function(t){return t.outcome&&t.outcome.toLowerCase()==='yes'})||tokens[0];
-        if(!tok||!tok.tokenId)return;
-        try{
-          var b=await fetchBook(tok.tokenId);
-          setBooks(function(p){var n=Object.assign({},p);n[tok.tokenId]=b;return n});
-        }catch(e){}
-      }));
+      // Load books in batches of 10 to avoid rate limits
+      var BATCH=10;
+      for(var i=0;i<Math.min(markets.length,500);i+=BATCH){
+        var batch=markets.slice(i,i+BATCH);
+        await Promise.allSettled(batch.map(async function(m){
+          var tokens=getTokens(m);
+          var tok=tokens.find(function(t){return t.outcome&&t.outcome.toLowerCase()==='yes'})||tokens[0];
+          if(!tok||!tok.tokenId)return;
+          try{
+            var b=await fetchBook(tok.tokenId);
+            setBooks(function(p){var n=Object.assign({},p);n[tok.tokenId]=b;return n});
+          }catch(e){}
+        }));
+        // small pause between batches to respect rate limits
+        await new Promise(function(r){setTimeout(r,200)});
+      }
       setRefetching(false);
     })();
   },[]);
 
-  useEffect(function(){
-    if(rawMarkets.length){
-      loadBooks(rawMarkets);
-      bookT.current=setInterval(function(){loadBooks(rawMarkets)},30000);
-    }
-    return function(){clearInterval(bookT.current)};
-  },[rawMarkets,loadBooks]);
-
-  var processed=useMemo(function(){
-    // sizes array = selected max thresholds. Market passes if its minSize <= any selected threshold
+  // Pre-filter markets before loading books — only candidates that pass rewards/spread/size
+  var preFiltered=useMemo(function(){
     var maxAllowed=Math.max.apply(null,filters.sizes);
     return rawMarkets.filter(function(m){
       if(isExcl(m))return false;
       var ms=getMs(m);
-      if(!ms||ms<=0)return false;   // must have rewards
-      if(ms>maxAllowed)return false; // minSize too large for our budget
+      if(!ms||ms<=0)return false;
+      if(ms>maxAllowed)return false;
+      if(getSpr(m)>=filters.maxSpread)return false;
+      if(getRew(m)<filters.minReward)return false;
+      return true;
+    });
+  },[rawMarkets,filters]);
+
+  useEffect(function(){
+    if(preFiltered.length){
+      loadBooks(preFiltered);
+      bookT.current=setInterval(function(){loadBooks(preFiltered)},60000);
+    }
+    return function(){clearInterval(bookT.current)};
+  },[preFiltered,loadBooks]);
+
+  var booksLoaded=Object.keys(books).length>0;
+  var processed=useMemo(function(){
+    var maxAllowed=Math.max.apply(null,filters.sizes);
+    return rawMarkets.filter(function(m){
+      if(isExcl(m))return false;
+      var ms=getMs(m);
+      if(!ms||ms<=0)return false;
+      if(ms>maxAllowed)return false;
       if(getSpr(m)>=filters.maxSpread)return false;
       if(getRew(m)<filters.minReward)return false;
       return true;
@@ -466,9 +487,14 @@ function App(){
       var tid=tok&&tok.tokenId?tok.tokenId:'';
       var book=tid&&books[tid]?books[tid]:{bids:[],asks:[]};
       var analysis=analyzeBook(tid,book,getMs(m));
-      return Object.assign({},m,{_cl:compLvl(m),analysis:analysis});
+      return Object.assign({},m,{_cl:compLvl(m),analysis:analysis,_tid:tid});
+    }).filter(function(m){
+      // KEY: show only markets where our stake is significant in the order book
+      if(!booksLoaded)return true;       // books still loading - show all
+      if(!books[m._tid])return true;     // this book not loaded yet - keep
+      return m.analysis.ok;              // must pass: vol<$300, pct>=5%, no dominant order
     });
-  },[rawMarkets,books,filters]);
+  },[rawMarkets,books,filters,booksLoaded]);
 
   var sorted=useMemo(function(){
     var fn={
