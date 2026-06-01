@@ -396,7 +396,7 @@ function SkCards(){
 }
 
 function App(){
-  var fs=useState({maxSize:50});
+  var fs=useState({});
   var filters=fs[0],setFilters=fs[1];
   var ms=useState('table');var mode=ms[0],setMode=ms[1];
   var sk=useState('reward');var sortKey=sk[0],setSortKey=sk[1];
@@ -453,17 +453,15 @@ function App(){
 
   // Pre-filter markets before loading books — only candidates that pass rewards/spread/size
   var preFiltered=useMemo(function(){
-    var maxAllowed=filters.maxSize||50;
     return rawMarkets.filter(function(m){
       if(isExcl(m))return false;
       var ms=getMs(m);
-      if(!ms||ms<=0)return false;
-      if(ms>maxAllowed)return false;
+      if(ms!==20&&ms!==40&&ms!==50)return false;
       if(getSpr(m)>=5)return false;
       if(getRew(m)<25)return false;
       return true;
     });
-  },[rawMarkets,filters.maxSize]);
+  },[rawMarkets]);
 
   useEffect(function(){
     if(preFiltered.length){
@@ -475,12 +473,10 @@ function App(){
 
   var booksLoaded=Object.keys(books).length>0;
   var processed=useMemo(function(){
-    var maxAllowed=filters.maxSize||50;
     return rawMarkets.filter(function(m){
       if(isExcl(m))return false;
       var ms=getMs(m);
-      if(!ms||ms<=0)return false;
-      if(ms>maxAllowed)return false;
+      if(ms!==20&&ms!==40&&ms!==50)return false;
       if(getSpr(m)>=5)return false;
       if(getRew(m)<25)return false;
       return true;
@@ -497,7 +493,7 @@ function App(){
       if(!books[m._tid])return true;     // this book not loaded yet - keep
       return m.analysis.ok;              // must pass: vol<$300, pct>=5%, no dominant order
     });
-  },[rawMarkets,books,filters.maxSize,booksLoaded]);
+  },[rawMarkets,books,booksLoaded]);
 
   var sorted=useMemo(function(){
     var fn={
@@ -535,17 +531,11 @@ function App(){
     React.createElement('div',{className:'fp'},
       React.createElement('div',{className:'fpr'},
         React.createElement('div',{className:'fg'},
-          React.createElement('div',{className:'fl'},'Макс. размер ставки (мин.доли)'),
-          React.createElement('div',{className:'bg'},
-            [[20,'≤20д'],[40,'≤40д'],[50,'≤50д']].map(function(pair){
-              var sz=pair[0],lbl=pair[1];
-              return React.createElement('button',{
-                key:sz,className:'tb'+(filters.maxSize===sz?' on':''),
-                onClick:function(){
-                  setFilters(function(f){return Object.assign({},f,{maxSize:sz})});
-                }
-              },lbl);
-            })
+          React.createElement('div',{className:'fl'},'Мин. размер ставки'),
+          React.createElement('div',{style:{display:'flex',gap:6}},
+            React.createElement('span',{style:{fontSize:13,fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',color:'var(--gt)',padding:'7px 14px',borderRadius:7,border:'1.5px solid #bbf7d0'}},'20д'),
+            React.createElement('span',{style:{fontSize:13,fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',color:'var(--gt)',padding:'7px 14px',borderRadius:7,border:'1.5px solid #bbf7d0'}},'40д'),
+            React.createElement('span',{style:{fontSize:13,fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',color:'var(--gt)',padding:'7px 14px',borderRadius:7,border:'1.5px solid #bbf7d0'}},'50д')
           )
         ),
         React.createElement('div',{className:'fdiv'}),
