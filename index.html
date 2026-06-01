@@ -178,9 +178,11 @@ function analyzeBook(tid,book,ms){
   var vol=bb.size*bb.price,stake=ms*bb.price;
   var pct=vol>0?(stake/vol)*100:0;
   var hasDom=bids.some(function(b){return b.size*b.price>500});
-  return{tokenId:tid,bestBidPrice:bb.price,bestAskPrice:ba.price,spread:ba.price-bb.price,
-    topBidVolume:vol,ourStakeUSD:stake,pct:pct,hasDom:hasDom,
-    ok:vol<300&&pct>=5&&!hasDom,bids:bids.slice(0,5),asks:asks.slice(0,5),stakeLevel:0};
+  var spreadCents=(ba.price-bb.price)*100;
+  var ok=vol<300&&pct>=5&&!hasDom&&spreadCents<5;
+  return{tokenId:tid,bestBidPrice:bb.price,bestAskPrice:ba.price,
+    spread:ba.price-bb.price,topBidVolume:vol,ourStakeUSD:stake,pct:pct,hasDom:hasDom,
+    ok:ok,bids:bids.slice(0,5),asks:asks.slice(0,5),stakeLevel:0};
 }
 function getTokens(m){
   var tokens=m.tokens||[];
@@ -223,7 +225,7 @@ async function fetchAllMarkets(setMsg){
     }
     setMsg('Загружено '+all.length+' рынков...');
     if(page.length<PAGE){done=true;}else{offset+=PAGE;}
-    if(all.length>=20000){done=true;}
+    if(all.length>=30000){done=true;}
   }
   return all;
 }
@@ -430,7 +432,7 @@ function App(){
       setRefetching(true);
       // Load books in batches of 10 to avoid rate limits
       var BATCH=10;
-      for(var i=0;i<Math.min(markets.length,500);i+=BATCH){
+      for(var i=0;i<Math.min(markets.length,1000);i+=BATCH){
         var batch=markets.slice(i,i+BATCH);
         await Promise.allSettled(batch.map(async function(m){
           var tokens=getTokens(m);
@@ -442,7 +444,7 @@ function App(){
           }catch(e){}
         }));
         // small pause between batches to respect rate limits
-        await new Promise(function(r){setTimeout(r,200)});
+        await new Promise(function(r){setTimeout(r,100)});
       }
       setRefetching(false);
     })();
