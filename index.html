@@ -478,7 +478,7 @@ function App(){
       var ms=getMs(m);
       if(ms!==20&&ms!==40&&ms!==50)return false;
       if(getSpr(m)>=5)return false;
-      if(getRew(m)<20)return false;
+      if(getRew(m)<25)return false;
       return true;
     }).map(function(m){
       var tokens=getTokens(m);
@@ -490,8 +490,9 @@ function App(){
     }).filter(function(m){
       // KEY: show only markets where our stake is significant in the order book
       if(!booksLoaded)return true;       // books still loading - show all
-      if(!books[m._tid])return true;     // this book not loaded yet - keep
-      return m.analysis.ok;              // must pass: vol<$300, pct>=5%, no dominant order
+      // Only show if book is loaded AND passes order book check
+      if(!books[m._tid])return false;    // book not loaded yet - hide until loaded
+      return m.analysis.ok;             // must pass order book check
     });
   },[rawMarkets,books,booksLoaded]);
 
@@ -549,6 +550,9 @@ function App(){
         ),
         React.createElement('div',{className:'fright'},
           React.createElement('div',{className:'ct'},'Найдено: ',React.createElement('strong',null,loading?'…':sorted.length),' из ',rawMarkets.length),
+          !loading&&React.createElement('div',{style:{fontSize:11,color:'var(--hint)',fontFamily:'var(--mono)'}},
+            'Стаканов загружено: '+Object.keys(books).length
+          ),
           refetching&&React.createElement('div',{className:'upd'},React.createElement('div',{className:'spin'}),'Обновление...')
         )
       )
