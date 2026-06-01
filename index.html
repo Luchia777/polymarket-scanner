@@ -212,7 +212,7 @@ async function fetchAllMarkets(setMsg){
     all=all.concat(page);
     setMsg('Загружено ' + all.length + ' рынков...');
     if(page.length<PAGE){done=true;}else{offset+=PAGE;}
-    if(all.length>=5000){done=true;}
+    if(all.length>=20000){done=true;}
   }
   return all.map(function(m){
     var ev=m.events&&m.events[0];
@@ -389,7 +389,7 @@ function SkCards(){
 }
 
 function App(){
-  var fs=useState({sizes:[20,40,50],maxSpread:5,minReward:30});
+  var fs=useState({sizes:[20,40,50],maxSpread:5,minReward:25});
   var filters=fs[0],setFilters=fs[1];
   var ms=useState('table');var mode=ms[0],setMode=ms[1];
   var sk=useState('reward');var sortKey=sk[0],setSortKey=sk[1];
@@ -446,10 +446,13 @@ function App(){
   },[rawMarkets,loadBooks]);
 
   var processed=useMemo(function(){
+    // sizes array = selected max thresholds. Market passes if its minSize <= any selected threshold
+    var maxAllowed=Math.max.apply(null,filters.sizes);
     return rawMarkets.filter(function(m){
       if(isExcl(m))return false;
       var ms=getMs(m);
-      if(filters.sizes.indexOf(ms)===-1)return false;
+      if(!ms||ms<=0)return false;   // must have rewards
+      if(ms>maxAllowed)return false; // minSize too large for our budget
       if(getSpr(m)>=filters.maxSpread)return false;
       if(getRew(m)<filters.minReward)return false;
       return true;
@@ -499,9 +502,10 @@ function App(){
     React.createElement('div',{className:'fp'},
       React.createElement('div',{className:'fpr'},
         React.createElement('div',{className:'fg'},
-          React.createElement('div',{className:'fl'},'Мин. размер ставки (доли)'),
+          React.createElement('div',{className:'fl'},'Макс. размер ставки (мин.доли)'),
           React.createElement('div',{className:'bg'},
-            [20,40,50].map(function(sz){
+            [[20,'≤20д'],[40,'≤40д'],[50,'≤50д']].map(function(pair){
+              var sz=pair[0],lbl=pair[1];
               return React.createElement('button',{
                 key:sz,className:'tb'+(filters.sizes.indexOf(sz)!==-1?' on':''),
                 onClick:function(){
@@ -511,7 +515,7 @@ function App(){
                     return Object.assign({},f,{sizes:next.length?next:f.sizes});
                   });
                 }
-              },sz);
+              },lbl);
             })
           )
         ),
