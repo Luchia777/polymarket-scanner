@@ -585,7 +585,10 @@ function App(){
               var ms20=rawMarkets.filter(function(m){return getMs(m)===20}).length;
               var ms40=rawMarkets.filter(function(m){return getMs(m)===40}).length;
               var ms50=rawMarkets.filter(function(m){return getMs(m)===50}).length;
-              return 'minSize в базе: 20д='+ms20+' / 40д='+ms40+' / 50д='+ms50+' | стаканов: '+Object.keys(books).length;
+              var ms20r=rawMarkets.filter(function(m){return getMs(m)===20&&getRew(m)>=25}).length;
+              var ms40r=rawMarkets.filter(function(m){return getMs(m)===40&&getRew(m)>=25}).length;
+              var ms50r=rawMarkets.filter(function(m){return getMs(m)===50&&getRew(m)>=25}).length;
+              return 'всего: 20д='+ms20+'(нагр:'+ms20r+') / 40д='+ms40+'(нагр:'+ms40r+') / 50д='+ms50+'(нагр:'+ms50r+') | стак:'+Object.keys(books).length;
             })()
           ),
           refetching&&React.createElement('div',{className:'upd'},React.createElement('div',{className:'spin'}),'Обновление...')
