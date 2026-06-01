@@ -133,10 +133,18 @@ tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 var useState=React.useState,useEffect=React.useEffect,useCallback=React.useCallback,useRef=React.useRef,useMemo=React.useMemo;
 
 var EXCL=['politics','middle-east','iran'];
-var CATS={crypto:'Крипто',cryptocurrency:'Крипто',sports:'Спорт',sport:'Спорт',
-  esports:'Киберспорт',finance:'Финансы',economy:'Финансы',
-  science:'Наука',culture:'Культура',technology:'Технологии',
-  'pop-culture':'Поп-культура',business:'Бизнес'};
+var CATS={
+  crypto:'Крипто',cryptocurrency:'Крипто','crypto-defi':'Крипто',
+  sports:'Спорт',sport:'Спорт',baseball:'Спорт',basketball:'Спорт',
+  football:'Спорт',soccer:'Спорт',tennis:'Спорт',hockey:'Спорт',golf:'Спорт',
+  mma:'Спорт',boxing:'Спорт',nfl:'Спорт',nba:'Спорт',mlb:'Спорт',nhl:'Спорт',
+  esports:'Киберспорт',gaming:'Киберспорт',
+  finance:'Финансы',economy:'Финансы',markets:'Финансы',stocks:'Финансы',
+  science:'Наука',technology:'Технологии',tech:'Технологии',ai:'Технологии',
+  'pop-culture':'Поп-культура','pop culture':'Поп-культура',entertainment:'Поп-культура',
+  business:'Бизнес',politics:'Политика',
+  'middle-east':'Ближний Восток',iran:'Иран',
+};
 var COMP=['','Оч.низкая','Низкая','Средняя','Высокая','Оч.высокая'];
 
 function getMs(m){return m.rewardsMinSize||m.rewards&&m.rewards.minSize||0}
@@ -158,7 +166,15 @@ function getCat(m){
 }
 function getCatLabel(m){
   var c=getCat(m).toLowerCase();
-  return CATS[c]||'Прочее';
+  if(CATS[c])return CATS[c];
+  // Try partial match
+  for(var k in CATS){if(c.indexOf(k)!==-1)return CATS[k];}
+  // Guess from question keywords
+  var q=(m.question||'').toLowerCase();
+  if(q.indexOf('bitcoin')+q.indexOf('eth')+q.indexOf('crypto')+q.indexOf('token')+q.indexOf('btc')>-4)return 'Крипто';
+  if(q.indexOf('nba')+q.indexOf('nfl')+q.indexOf('mlb')+q.indexOf('nhl')+q.indexOf('soccer')>-4)return 'Спорт';
+  if(q.indexOf('esport')+q.indexOf('lol')+q.indexOf('dota')+q.indexOf('cs2')+q.indexOf('lck')>-4)return 'Киберспорт';
+  return 'Прочее';
 }
 function isExcl(m){
   var c=getCat(m).toLowerCase();
@@ -285,7 +301,7 @@ function TableRow(props){
       )
     ),
     React.createElement('td',null,React.createElement('span',{className:'mo g'},rew>0?rew.toFixed(0):'—')),
-    React.createElement('td',null,React.createElement('span',{className:'mo'},getSpr(m).toFixed(1)+'¢')),
+    React.createElement('td',null,React.createElement('span',{className:'mo'},a.spread>0?(a.spread*100).toFixed(1)+'¢':getSpr(m).toFixed(1)+'¢')),
     React.createElement('td',null,React.createElement('span',{className:'mo'},getMs(m))),
     React.createElement('td',null,React.createElement(MiniOB,{bids:a.bids,asks:a.asks})),
     React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:chipCls},a.pct.toFixed(0)+'%')),
@@ -325,7 +341,7 @@ function MiniCard(props){
       )
     ),
     React.createElement('div',{className:'mcgr'},
-      React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Спред'),React.createElement('div',{className:'mcv'},getSpr(m).toFixed(1)+'¢')),
+      React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Реальный спред'),React.createElement('div',{className:'mcv'},a.spread>0?(a.spread*100).toFixed(1)+'¢':getSpr(m).toFixed(1)+'¢')),
       React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Bid'),React.createElement('div',{className:'mcv'},(a.bestBidPrice*100).toFixed(1)+'¢')),
       React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Ставка'),React.createElement('div',{className:'mcv'},'$'+a.ourStakeUSD.toFixed(2))),
       React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Закрытие'),React.createElement('div',{className:'mcv dt'},ds))
@@ -499,7 +515,7 @@ function App(){
   var sorted=useMemo(function(){
     var fn={
       reward:function(m){return getRew(m)},
-      spread:function(m){return -getSpr(m)},
+      spread:function(m){return m.analysis&&m.analysis.spread>0?-m.analysis.spread*100:-getSpr(m)},
       minSize:function(m){return getMs(m)},
       pct:function(m){return m.analysis.pct},
     };
@@ -550,8 +566,13 @@ function App(){
         ),
         React.createElement('div',{className:'fright'},
           React.createElement('div',{className:'ct'},'Найдено: ',React.createElement('strong',null,loading?'…':sorted.length),' из ',rawMarkets.length),
-          !loading&&React.createElement('div',{style:{fontSize:11,color:'var(--hint)',fontFamily:'var(--mono)'}},
-            'Стаканов загружено: '+Object.keys(books).length
+          !loading&&React.createElement('div',{style:{fontSize:11,color:'var(--hint)',fontFamily:'var(--mono)',marginTop:3}},
+            (function(){
+              var ms20=rawMarkets.filter(function(m){return getMs(m)===20}).length;
+              var ms40=rawMarkets.filter(function(m){return getMs(m)===40}).length;
+              var ms50=rawMarkets.filter(function(m){return getMs(m)===50}).length;
+              return 'minSize в базе: 20д='+ms20+' / 40д='+ms40+' / 50д='+ms50+' | стаканов: '+Object.keys(books).length;
+            })()
           ),
           refetching&&React.createElement('div',{className:'upd'},React.createElement('div',{className:'spin'}),'Обновление...')
         )
