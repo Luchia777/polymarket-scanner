@@ -196,7 +196,10 @@ function analyzeBook(tid,book,ms){
   var hasDom=bids.some(function(b){return b.size*b.price>1000});
   var spreadCents=(ba.price-bb.price)*100;
   // Minimum volume on best bid level must be at least $5 to be meaningful
-  var maxVol=ms<=20?500:ms<=40?1000:2000;var minPct=ms<=20?3:ms<=40?2:1.5;var ok=vol>=5&&vol<maxVol&&pct>=minPct&&pct<=100&&!hasDom&&spreadCents<5;
+  // Scale thresholds by minSize
+  var maxVol=ms<=20?500:ms<=40?2000:10000;
+  var minPct=ms<=20?3:ms<=40?1.5:0.5;
+  var ok=vol>=1&&vol<maxVol&&pct>=minPct&&pct<=100&&!hasDom&&spreadCents<5;
   return{tokenId:tid,bestBidPrice:bb.price,bestAskPrice:ba.price,
     spread:ba.price-bb.price,topBidVolume:vol,ourStakeUSD:stake,pct:pct,hasDom:hasDom,
     ok:ok,bids:bids.slice(0,5),asks:asks.slice(0,5),stakeLevel:0};
@@ -481,8 +484,19 @@ function App(){
 
   useEffect(function(){
     if(preFiltered.length){
-      loadBooks(preFiltered);
-      bookT.current=setInterval(function(){loadBooks(preFiltered)},60000);
+      // Interleave: take markets by minSize groups equally so 20/40/50 all get checked
+      var ms20=preFiltered.filter(function(m){return getMs(m)===20});
+      var ms40=preFiltered.filter(function(m){return getMs(m)===40});
+      var ms50=preFiltered.filter(function(m){return getMs(m)===50});
+      var interleaved=[];
+      var maxLen=Math.max(ms20.length,ms40.length,ms50.length);
+      for(var i=0;i<maxLen;i++){
+        if(i<ms20.length)interleaved.push(ms20[i]);
+        if(i<ms40.length)interleaved.push(ms40[i]);
+        if(i<ms50.length)interleaved.push(ms50[i]);
+      }
+      loadBooks(interleaved);
+      bookT.current=setInterval(function(){loadBooks(interleaved)},60000);
     }
     return function(){clearInterval(bookT.current)};
   },[preFiltered,loadBooks]);
