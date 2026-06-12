@@ -192,14 +192,11 @@ function analyzeBook(tid,book,ms){
   if(!bids.length||!asks.length)return empty;
   var bb=bids[0],ba=asks[0];
   var vol=bb.size*bb.price,stake=ms*bb.price;
+  var totalBidVol=bids.reduce(function(s,b){return s+b.size*b.price},0);
   var pct=vol>0?(stake/vol)*100:0;
   var hasDom=bids.some(function(b){return b.size*b.price>1000});
   var spreadCents=(ba.price-bb.price)*100;
-  // Minimum volume on best bid level must be at least $5 to be meaningful
-  // Scale thresholds by minSize
-  var maxVol=ms<=20?500:ms<=40?2000:10000;
-  var minPct=ms<=20?3:ms<=40?1.5:0.5;
-  var ok=vol>=1&&vol<maxVol&&pct>=minPct&&pct<=100&&!hasDom&&spreadCents<5;
+  var ok=totalBidVol>=10&&totalBidVol<=4000&&pct>=5&&pct<=100&&spreadCents<5;
   return{tokenId:tid,bestBidPrice:bb.price,bestAskPrice:ba.price,
     spread:ba.price-bb.price,topBidVolume:vol,ourStakeUSD:stake,pct:pct,hasDom:hasDom,
     ok:ok,bids:bids.slice(0,5),asks:asks.slice(0,5),stakeLevel:0};
