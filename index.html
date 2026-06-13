@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -134,18 +134,18 @@ var useState=React.useState,useEffect=React.useEffect,useCallback=React.useCallb
 
 var EXCL=['politics','middle-east','iran'];
 var CATS={
-  crypto:'Крипто',cryptocurrency:'Крипто','crypto-defi':'Крипто',
-  sports:'Спорт',sport:'Спорт',baseball:'Спорт',basketball:'Спорт',
-  football:'Спорт',soccer:'Спорт',tennis:'Спорт',hockey:'Спорт',golf:'Спорт',
-  mma:'Спорт',boxing:'Спорт',nfl:'Спорт',nba:'Спорт',mlb:'Спорт',nhl:'Спорт',
-  esports:'Киберспорт',gaming:'Киберспорт',
-  finance:'Финансы',economy:'Финансы',markets:'Финансы',stocks:'Финансы',
-  science:'Наука',technology:'Технологии',tech:'Технологии',ai:'Технологии',
-  'pop-culture':'Поп-культура','pop culture':'Поп-культура',entertainment:'Поп-культура',
-  business:'Бизнес',politics:'Политика',
-  'middle-east':'Ближний Восток',iran:'Иран',
+  crypto:'Crypto',cryptocurrency:'Crypto','crypto-defi':'Crypto',
+  sports:'Sports',sport:'Sports',baseball:'Sports',basketball:'Sports',
+  football:'Sports',soccer:'Sports',tennis:'Sports',hockey:'Sports',golf:'Sports',
+  mma:'Sports',boxing:'Sports',nfl:'Sports',nba:'Sports',mlb:'Sports',nhl:'Sports',
+  esports:'Esports',gaming:'Esports',
+  finance:'Finance',economy:'Finance',markets:'Finance',stocks:'Finance',
+  science:'Science',technology:'Tech',tech:'Tech',ai:'Tech',
+  'pop-culture':'Pop Culture','pop culture':'Pop Culture',entertainment:'Pop Culture',
+  business:'Business',politics:'Politics',
+  'middle-east':'Middle East',iran:'Iran',
 };
-var COMP=['','Оч.низкая','Низкая','Средняя','Высокая','Оч.высокая'];
+var COMP=['','Very low','Low','Medium','High','Very high'];
 
 function getMs(m){return m.rewardsMinSize||m.rewards&&m.rewards.minSize||0}
 function getSpr(m){return m.rewardsMaxSpread||m.rewards&&m.rewards.maxSpread||99}
@@ -171,10 +171,10 @@ function getCatLabel(m){
   for(var k in CATS){if(c.indexOf(k)!==-1)return CATS[k];}
   // Guess from question keywords
   var q=(m.question||'').toLowerCase();
-  if(q.indexOf('bitcoin')+q.indexOf('eth')+q.indexOf('crypto')+q.indexOf('token')+q.indexOf('btc')>-4)return 'Крипто';
-  if(q.indexOf('nba')+q.indexOf('nfl')+q.indexOf('mlb')+q.indexOf('nhl')+q.indexOf('soccer')>-4)return 'Спорт';
-  if(q.indexOf('esport')+q.indexOf('lol')+q.indexOf('dota')+q.indexOf('cs2')+q.indexOf('lck')>-4)return 'Киберспорт';
-  return 'Прочее';
+  if(q.indexOf('bitcoin')+q.indexOf('eth')+q.indexOf('crypto')+q.indexOf('token')+q.indexOf('btc')>-4)return 'Crypto';
+  if(q.indexOf('nba')+q.indexOf('nfl')+q.indexOf('mlb')+q.indexOf('nhl')+q.indexOf('soccer')>-4)return 'Sports';
+  if(q.indexOf('esport')+q.indexOf('lol')+q.indexOf('dota')+q.indexOf('cs2')+q.indexOf('lck')>-4)return 'Esports';
+  return 'Other';
 }
 function isExcl(m){
   var c=getCat(m).toLowerCase();
@@ -192,11 +192,19 @@ function analyzeBook(tid,book,ms){
   if(!bids.length||!asks.length)return empty;
   var bb=bids[0],ba=asks[0];
   var vol=bb.size*bb.price,stake=ms*bb.price;
-  var totalBidVol=bids.reduce(function(s,b){return s+b.size*b.price},0);
   var pct=vol>0?(stake/vol)*100:0;
-  var hasDom=bids.some(function(b){return b.size*b.price>1000});
+  var hasDom=bids.some(function(b){return b.size*b.price>500});
   var spreadCents=(ba.price-bb.price)*100;
-  var ok=totalBidVol>=10&&totalBidVol<=4000&&pct>=5&&pct<=100&&spreadCents<5;
+  // Minimum volume on best bid level must be at least $5 to be meaningful
+  // Our stake must be meaningful in the order book
+  // maxVol = max total volume on best bid level
+  // minPct = our stake must be at least this % of that volume
+  // For minSize=20: stake ~$4-14, meaningful if vol < $200
+  // For minSize=40: stake ~$8-28, meaningful if vol < $400  
+  // For minSize=50: stake ~$25-50, meaningful if vol < $500
+  var maxVol=ms<=20?200:ms<=40?400:500;
+  var minPct=10; // our stake must be at least 10% of best level
+  var ok=vol>=1&&vol<maxVol&&pct>=minPct&&pct<=100&&!hasDom&&spreadCents<5;
   return{tokenId:tid,bestBidPrice:bb.price,bestAskPrice:ba.price,
     spread:ba.price-bb.price,topBidVolume:vol,ourStakeUSD:stake,pct:pct,hasDom:hasDom,
     ok:ok,bids:bids.slice(0,5),asks:asks.slice(0,5),stakeLevel:0};
@@ -240,7 +248,7 @@ async function fetchAllMarkets(setMsg){
         }));
       }
     }
-    setMsg('Загружено '+all.length+' рынков...');
+    setMsg('Loaded '+all.length+' markets...');
     if(page.length<PAGE){done=true;}else{offset+=PAGE;}
     if(all.length>=30000){done=true;}
   }
@@ -306,7 +314,7 @@ function TableRow(props){
     React.createElement('td',null,React.createElement(MiniOB,{bids:a.bids,asks:a.asks})),
     React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:chipCls},a.pct.toFixed(0)+'%')),
     React.createElement('td',{style:{textAlign:'right'}},
-      React.createElement('a',{className:'obtn',href:buildUrl(m),target:'_blank',rel:'noopener noreferrer'},'Открыть ↗')
+      React.createElement('a',{className:'obtn',href:buildUrl(m),target:'_blank',rel:'noopener noreferrer'},'Open ↗')
     )
   );
 }
@@ -322,7 +330,7 @@ function MiniCard(props){
   var bw=function(l){return Math.max(5,Math.min(80,(l.size*l.price/mx)*80))};
   var fmt=function(n){return n<0.01?n.toFixed(4):n<1?n.toFixed(3):n.toFixed(2)};
   var ed=new Date(m.endDate||'');
-  var ds=isNaN(ed.getTime())?'—':ed.toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
+  var ds=isNaN(ed.getTime())?'—':ed.toLocaleDateString('en-US',{day:'numeric',month:'short'});
   return React.createElement('div',{className:'mc'+(isBest?' best':'')},
     React.createElement('div',{className:'mca'}),
     React.createElement('div',{className:'mch'},
@@ -332,19 +340,19 @@ function MiniCard(props){
     React.createElement('div',{className:'mcq',title:m.question},m.question),
     React.createElement('div',{className:'mcrh'},
       React.createElement('div',null,
-        React.createElement('div',{className:'mcrl'},'Награда'),
+        React.createElement('div',{className:'mcrl'},'Reward'),
         React.createElement('div',{className:'mcrv'},rew>0?rew.toFixed(0):'—')
       ),
       React.createElement('div',{className:'mcsb'},
         React.createElement('div',{className:'mcsn '+(isBest?'g':'a')},a.pct.toFixed(0)+'%'),
-        React.createElement('div',{className:'mcsl'},'доля в стакане')
+        React.createElement('div',{className:'mcsl'},'share in book')
       )
     ),
     React.createElement('div',{className:'mcgr'},
       React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Реальный спред'),React.createElement('div',{className:'mcv'},a.spread>0?(a.spread*100).toFixed(1)+'¢':getSpr(m).toFixed(1)+'¢')),
       React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Bid'),React.createElement('div',{className:'mcv'},(a.bestBidPrice*100).toFixed(1)+'¢')),
-      React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Ставка'),React.createElement('div',{className:'mcv'},'$'+a.ourStakeUSD.toFixed(2))),
-      React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Закрытие'),React.createElement('div',{className:'mcv dt'},ds))
+      React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Your stake'),React.createElement('div',{className:'mcv'},'$'+a.ourStakeUSD.toFixed(2))),
+      React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Closes'),React.createElement('div',{className:'mcv dt'},ds))
     ),
     React.createElement('div',{className:'mcsep'}),
     React.createElement('div',{className:'mccmp'},
@@ -376,7 +384,7 @@ function MiniCard(props){
       )
     ),
     React.createElement('div',{className:'mcf',style:{marginTop:'auto'}},
-      React.createElement('a',{className:'ofbtn',href:buildUrl(m),target:'_blank',rel:'noopener noreferrer'},'Открыть рынок ↗')
+      React.createElement('a',{className:'ofbtn',href:buildUrl(m),target:'_blank',rel:'noopener noreferrer'},'Open market ↗')
     )
   );
 }
@@ -420,7 +428,7 @@ function App(){
   var rm=useState([]);var rawMarkets=rm[0],setRaw=rm[1];
   var bk=useState({});var books=bk[0],setBooks=bk[1];
   var ld=useState(true);var loading=ld[0],setLoading=ld[1];
-  var lm=useState('Загрузка рынков...');var loadMsg=lm[0],setLoadMsg=lm[1];
+  var lm=useState('Loading markets...');var loadMsg=lm[0],setLoadMsg=lm[1];
   var er=useState(null);var error=er[0],setError=er[1];
   var rf=useState(false);var refetching=rf[0],setRefetching=rf[1];
   var refT=useRef(null),bookT=useRef(null);
@@ -428,9 +436,9 @@ function App(){
   var loadMarkets=useCallback(function(){
     return (async function(){
       try{
-        setError(null);setLoadMsg('Загрузка рынков...');
+        setError(null);setLoadMsg('Loading markets...');
         var d=await fetchAllMarkets(setLoadMsg);
-        setLoadMsg('Загружено '+d.length+' рынков');
+        setLoadMsg('Loaded '+d.length+' markets');
         setRaw(d);
       }catch(e){setError(e.message);}
       finally{setLoading(false);}
@@ -551,15 +559,15 @@ function App(){
         ),
         React.createElement('div',null,
           React.createElement('div',{className:'aname'},'Polymarket Rewards Scanner'),
-          React.createElement('div',{className:'asub'},'Сканер рынков для ликвидити-провайдеров')
+          React.createElement('div',{className:'asub'},'Market scanner for liquidity providers')
         )
       ),
-      React.createElement('div',{className:'lpill'},React.createElement('div',{className:'ldot'}),'Live · 30с')
+      React.createElement('div',{className:'lpill'},React.createElement('div',{className:'ldot'}),'Live · 30s')
     ),
     React.createElement('div',{className:'fp'},
       React.createElement('div',{className:'fpr'},
         React.createElement('div',{className:'fg'},
-          React.createElement('div',{className:'fl'},'Мин. размер ставки'),
+          React.createElement('div',{className:'fl'},'Min. stake size'),
           React.createElement('div',{style:{display:'flex',gap:6}},
             React.createElement('span',{style:{fontSize:13,fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',color:'var(--gt)',padding:'7px 14px',borderRadius:7,border:'1.5px solid #bbf7d0'}},'20д'),
             React.createElement('span',{style:{fontSize:13,fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',color:'var(--gt)',padding:'7px 14px',borderRadius:7,border:'1.5px solid #bbf7d0'}},'40д'),
@@ -570,45 +578,45 @@ function App(){
         React.createElement('div',{className:'fg'},
           React.createElement('div',{className:'fl'},'Фиксированные критерии'),
           React.createElement('div',{style:{display:'flex',gap:12,alignItems:'center'}},
-            React.createElement('span',{style:{fontSize:12,color:'var(--gd)',fontWeight:600,fontFamily:'var(--mono)',background:'var(--gbg)',padding:'4px 10px',borderRadius:6}},'Награда ≥ 25'),
-            React.createElement('span',{style:{fontSize:12,color:'var(--muted)',fontWeight:600,fontFamily:'var(--mono)',background:'#f1f5f9',padding:'4px 10px',borderRadius:6}},'Спред < 5¢'),
-            React.createElement('span',{style:{fontSize:12,color:'var(--muted)',fontWeight:600,fontFamily:'var(--mono)',background:'#f1f5f9',padding:'4px 10px',borderRadius:6}},'Доля ≥ 3%')
+            React.createElement('span',{style:{fontSize:12,color:'var(--gd)',fontWeight:600,fontFamily:'var(--mono)',background:'var(--gbg)',padding:'4px 10px',borderRadius:6}},'Reward ≥ 20'),
+            React.createElement('span',{style:{fontSize:12,color:'var(--muted)',fontWeight:600,fontFamily:'var(--mono)',background:'#f1f5f9',padding:'4px 10px',borderRadius:6}},'Spread < 5¢'),
+            React.createElement('span',{style:{fontSize:12,color:'var(--muted)',fontWeight:600,fontFamily:'var(--mono)',background:'#f1f5f9',padding:'4px 10px',borderRadius:6}},'Share ≥ 5%')
           )
         ),
         React.createElement('div',{className:'fright'},
-          React.createElement('div',{className:'ct'},'Найдено: ',React.createElement('strong',null,loading?'…':sorted.length),' из ',rawMarkets.length),
+          React.createElement('div',{className:'ct'},'Found: ',React.createElement('strong',null,loading?'…':sorted.length),' of ',rawMarkets.length),
           !loading&&React.createElement('div',{style:{fontSize:11,color:'var(--hint)',fontFamily:'var(--mono)',marginTop:3}},
             (function(){
               var ms20=rawMarkets.filter(function(m){return getMs(m)===20}).length;
               var ms40=rawMarkets.filter(function(m){return getMs(m)===40}).length;
               var ms50=rawMarkets.filter(function(m){return getMs(m)===50}).length;
-              var ms20r=rawMarkets.filter(function(m){return getMs(m)===20&&getRew(m)>=25}).length;
-              var ms40r=rawMarkets.filter(function(m){return getMs(m)===40&&getRew(m)>=25}).length;
-              var ms50r=rawMarkets.filter(function(m){return getMs(m)===50&&getRew(m)>=25}).length;
-              return 'всего: 20д='+ms20+'(нагр:'+ms20r+') / 40д='+ms40+'(нагр:'+ms40r+') / 50д='+ms50+'(нагр:'+ms50r+') | стак:'+Object.keys(books).length;
+              var ms20r=rawMarkets.filter(function(m){return getMs(m)===20&&getRew(m)>=20}).length;
+              var ms40r=rawMarkets.filter(function(m){return getMs(m)===40&&getRew(m)>=20}).length;
+              var ms50r=rawMarkets.filter(function(m){return getMs(m)===50&&getRew(m)>=20}).length;
+              return 'total: 20s='+ms20+'(rew:'+ms20r+') / 40s='+ms40+'(rew:'+ms40r+') / 50s='+ms50+'(rew:'+ms50r+') | books:'+Object.keys(books).length;
             })()
           ),
-          refetching&&React.createElement('div',{className:'upd'},React.createElement('div',{className:'spin'}),'Обновление...')
+          refetching&&React.createElement('div',{className:'upd'},React.createElement('div',{className:'spin'}),'Updating...')
         )
       )
     ),
     !loading&&!error&&React.createElement('div',{className:'mbar'},
-      React.createElement('button',{className:'mb'+(mode==='table'?' on':''),onClick:function(){setMode('table')}},'☰ Таблица'),
-      React.createElement('button',{className:'mb'+(mode==='cards'?' on':''),onClick:function(){setMode('cards')}},'⊞ Карточки'),
-      mode==='table'&&React.createElement('span',{className:'sh'},'Кликни заголовок для сортировки')
+      React.createElement('button',{className:'mb'+(mode==='table'?' on':''),onClick:function(){setMode('table')}},'☰ Table'),
+      React.createElement('button',{className:'mb'+(mode==='cards'?' on':''),onClick:function(){setMode('cards')}},'⊞ Cards'),
+      mode==='table'&&React.createElement('span',{className:'sh'},'Click column header to sort')
     ),
     loading&&React.createElement('div',{className:'pm'},loadMsg),
     loading&&(mode==='table'?React.createElement(SkTbl,null):React.createElement(SkCards,null)),
     !loading&&error&&React.createElement('div',{className:'sb'},
       React.createElement('div',{className:'si'},'⚠️'),
-      React.createElement('div',{className:'st'},'Ошибка загрузки'),
+      React.createElement('div',{className:'st'},'Loading error'),
       React.createElement('div',{className:'ss'},error),
-      React.createElement('button',{className:'rb',onClick:function(){setLoading(true);loadMarkets();}},'Повторить')
+      React.createElement('button',{className:'rb',onClick:function(){setLoading(true);loadMarkets();}},'Retry')
     ),
     !loading&&!error&&sorted.length===0&&React.createElement('div',{className:'sb'},
       React.createElement('div',{className:'si'},'🔍'),
-      React.createElement('div',{className:'st'},'Рынки не найдены'),
-      React.createElement('div',{className:'ss'},'Загружено '+rawMarkets.length+' рынков с наградами. Ни один не прошёл фильтры (minSize 20/40/50, спред < '+5+'¢, награда >= '+25+'). Попробуйте снизить минимальную награду.')
+      React.createElement('div',{className:'st'},'No markets found'),
+      React.createElement('div',{className:'ss'},'Loaded '+rawMarkets.length+' markets with rewards. None passed filters (minSize 20/40/50, spread < 5¢, reward ≥ 20, share ≥ 5%). Try again later.')
     ),
     !loading&&!error&&sorted.length>0&&mode==='table'&&React.createElement('div',{className:'tw'},
       React.createElement('table',null,
@@ -620,11 +628,11 @@ function App(){
         ),
         React.createElement('thead',null,React.createElement('tr',null,
           React.createElement('th',null,'Рынок'),
-          React.createElement('th',{onClick:function(){toggleSort('reward')}},'Награда ',React.createElement('span',{className:'sa'+(sortKey==='reward'?' on':'')},arr('reward'))),
-          React.createElement('th',{onClick:function(){toggleSort('spread')}},'Спред ',React.createElement('span',{className:'sa'+(sortKey==='spread'?' on':'')},arr('spread'))),
+          React.createElement('th',{onClick:function(){toggleSort('reward')}},'Reward ',React.createElement('span',{className:'sa'+(sortKey==='reward'?' on':'')},arr('reward'))),
+          React.createElement('th',{onClick:function(){toggleSort('spread')}},'Spread ',React.createElement('span',{className:'sa'+(sortKey==='spread'?' on':'')},arr('spread'))),
           React.createElement('th',{onClick:function(){toggleSort('minSize')}},'Min ',React.createElement('span',{className:'sa'+(sortKey==='minSize'?' on':'')},arr('minSize'))),
           React.createElement('th',null,'Стакан'),
-          React.createElement('th',{className:'r',title:'Какую долю объёма лучшего уровня займёт наша минимальная ставка. Чем больше % — тем лучше позиция в стакане.',onClick:function(){toggleSort('pct')}},'% в стакане ',React.createElement('span',{className:'sa'+(sortKey==='pct'?' on':'')},arr('pct'))),
+          React.createElement('th',{className:'r',title:'What share of the best level volume our minimum stake takes. Higher % = better position.',onClick:function(){toggleSort('pct')}},'% in book ',React.createElement('span',{className:'sa'+(sortKey==='pct'?' on':'')},arr('pct'))),
           React.createElement('th',{className:'r'})
         )),
         React.createElement('tbody',null,sorted.map(function(m){
