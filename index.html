@@ -214,18 +214,23 @@ function compLvl(m){
   var l=parseFloat(m.liquidityNum||m.liquidity||0);
   if(l<300)return 1;if(l<2000)return 2;if(l<10000)return 3;if(l<50000)return 4;return 5;
 }
-function analyzeBook(tid,book,ms){
+function analyzeBook(tid,book,ms,maxSpread){
   var empty={tokenId:tid,bestBidPrice:0,bestAskPrice:0,spread:0,topBidVolume:0,ourStakeUSD:0,pct:0,totalVol:0,ok:false,bids:[],asks:[]};
   if(!book||!book.bids||!book.bids.length||!book.asks||!book.asks.length)return empty;
   var bids=book.bids.filter(function(b){return b.price>0&&b.size>0}).sort(function(a,b){return b.price-a.price});
   var asks=book.asks.filter(function(a){return a.price>0&&a.size>0}).sort(function(a,b){return a.price-b.price});
   if(!bids.length||!asks.length)return empty;
   var bb=bids[0],ba=asks[0];
-  // totalVol = sum of (size * price) across EVERY level, both bids and asks.
-  // This is the core competition filter: the more money already sitting in the
-  // book, the smaller our slice of the daily reward. Cap at $4000.
-  var bidVol=bids.reduce(function(s,l){return s+l.size*l.price},0);
-  var askVol=asks.reduce(function(s,l){return s+l.size*l.price},0);
+  // Competition that matters = orders NEAR the midpoint, i.e. within the reward
+  // max-spread. The CLOB book also returns far-away "parked" orders that never
+  // compete for the daily reward; counting them wrongly inflated liquidity and
+  // marked good markets as crowded. We sum (size * price) only for orders within
+  // +/- maxSpread of the midpoint, on both sides. Cap at $4000.
+  var mid=(bb.price+ba.price)/2;
+  var band=(maxSpread>0&&maxSpread<50?maxSpread:5)/100;
+  function near(l){return Math.abs(l.price-mid)<=band+1e-9}
+  var bidVol=bids.filter(near).reduce(function(s,l){return s+l.size*l.price},0);
+  var askVol=asks.filter(near).reduce(function(s,l){return s+l.size*l.price},0);
   var totalVol=bidVol+askVol;
   var topBidVolume=bb.size*bb.price;
   var stake=ms*bb.price;
@@ -331,7 +336,7 @@ function WhyList(props){
   var a=props.a,rew=props.rew;
   var sc=a.spread*100;
   var items=[
-    {ok:a.totalVol<=2000,t:'Low competition ($'+Math.round(a.totalVol)+' total in book)'},
+    {ok:a.totalVol<=2000,t:'Low competition ($'+Math.round(a.totalVol)+' near the midpoint)'},
     {ok:a.pct>=10,t:'Your bid is '+a.pct.toFixed(0)+'% of the best level'},
     {ok:sc<=2,t:sc<=2?'Tight spread ('+sc.toFixed(1)+'¢)':'Spread '+sc.toFixed(1)+'¢'},
     {ok:rew>=30,t:'Reward '+(rew>0?rew.toFixed(0):'0')+' USDC/day'}
@@ -427,7 +432,7 @@ function MiniCard(props){
       ),
       React.createElement('div',{className:'heroBar'},
         React.createElement('div',{className:'heroBl'},
-          React.createElement('span',null,'Competition room ($'+Math.round(a.totalVol)+' of $4000 in book)'),
+          React.createElement('span',null,'Competition room ($'+Math.round(a.totalVol)+' of $4000 near mid)'),
           React.createElement('span',null,room.toFixed(0)+'%')
         ),
         React.createElement('div',{className:'heroBt'},
@@ -440,7 +445,7 @@ function MiniCard(props){
       React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Real spread'),React.createElement('div',{className:'mcv'},sc>0?sc.toFixed(1)+'¢':getSpr(m).toFixed(1)+'¢')),
       React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Best bid'),React.createElement('div',{className:'mcv'},(a.bestBidPrice*100).toFixed(1)+'¢')),
       React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Your stake'),React.createElement('div',{className:'mcv'},'$'+a.ourStakeUSD.toFixed(2))),
-      React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Book liquidity'),React.createElement('div',{className:'mcv'},'$'+Math.round(a.totalVol))),
+      React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Near-mid liquidity'),React.createElement('div',{className:'mcv'},'$'+Math.round(a.totalVol))),
       React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Reward / day'),React.createElement('div',{className:'mcv'},rew>0?rew.toFixed(0):'—')),
       React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Closes'),React.createElement('div',{className:'mcv dt'},ds))
     ),
@@ -606,7 +611,7 @@ function App(){
       var tok=tokens.find(function(t){return t.outcome&&t.outcome.toLowerCase()==='yes'})||tokens[0];
       var tid=tok&&tok.tokenId?tok.tokenId:'';
       var book=tid&&books[tid]?books[tid]:{bids:[],asks:[]};
-      var analysis=analyzeBook(tid,book,getMs(m));
+      var analysis=analyzeBook(tid,book,getMs(m),getSpr(m));
       return Object.assign({},m,{_cl:compLvl(m),analysis:analysis,_tid:tid,_score:calcScore(analysis)});
     }).filter(function(m){
       // KEY: show only markets where total book liquidity is small enough
@@ -681,7 +686,7 @@ function App(){
         React.createElement('div',{className:'fg'},
           React.createElement('div',{className:'fl'},'Competition filter'),
           React.createElement('div',{style:{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}},
-            React.createElement('span',{title:'Sum of every order in the book, both buy and sell. Lower = your small bid is a bigger slice of the reward.',style:critOn},'Book liquidity $10–$4000'),
+            React.createElement('span',{title:'Sum of orders near the midpoint (the ones that compete for the reward), both buy and sell. Far-away parked orders are ignored. Lower = your small bid is a bigger slice.',style:critOn},'Competition $10–$4000'),
             React.createElement('span',{title:'Your minimum stake as a share of the best bid level.',style:critOff},'Your share ≥ 5%'),
             React.createElement('span',{style:critOff},'Spread < 5¢')
           )
@@ -715,7 +720,7 @@ function App(){
         React.createElement('div',{className:'wsi'},React.createElement('div',{className:'wsv'},summary.avgRew+'/day'),React.createElement('div',{className:'wsl'},'Average reward')),
         React.createElement('div',{className:'wsi'},React.createElement('div',{className:'wsq',title:summary.best.question},getCatLabel(summary.best)+' · '+summary.best.question),React.createElement('div',{className:'wsl'},'Best candidate (score '+(summary.best._score||0)+')'))
       ),
-      React.createElement('div',{className:'wsnote'},'We only show markets with ',React.createElement('b',null,'$10–$4,000 total liquidity'),' in the order book (buy and sell sides combined). The emptier the book, the bigger the slice your $4–$25 order takes — and the larger your cut of the daily reward.')
+      React.createElement('div',{className:'wsnote'},'We only show markets with ',React.createElement('b',null,'$10–$4,000 of competing liquidity'),' — orders near the midpoint that actually share the daily reward (both sides). Far-away parked orders are ignored. The emptier this zone, the bigger the slice your $4–$25 order takes.')
     ),
     !loading&&!error&&React.createElement('div',{className:'mbar'},
       React.createElement('button',{className:'mb'+(mode==='table'?' on':''),onClick:function(){setMode('table')}},'☰ Table'),
@@ -749,7 +754,7 @@ function App(){
           React.createElement('th',{className:'r',title:'Opportunity score 0-100, based on competition (share, book liquidity, spread).',onClick:function(){toggleSort('score')}},'Score ',React.createElement('span',{className:'sa'+(sortKey==='score'?' on':'')},arr('score'))),
           React.createElement('th',null,'Status'),
           React.createElement('th',{className:'r',title:'Your minimum stake as a share of the best bid level.',onClick:function(){toggleSort('pct')}},'Share ',React.createElement('span',{className:'sa'+(sortKey==='pct'?' on':'')},arr('pct'))),
-          React.createElement('th',{className:'r',title:'Total $ of all orders in the book, both sides. Lower = less competition.',onClick:function(){toggleSort('liquidity')}},'Liquidity ',React.createElement('span',{className:'sa'+(sortKey==='liquidity'?' on':'')},arr('liquidity'))),
+          React.createElement('th',{className:'r',title:'Total $ of orders near the midpoint (competing for the reward), both sides. Far-away parked orders are ignored. Lower = less competition.',onClick:function(){toggleSort('liquidity')}},'Competition ',React.createElement('span',{className:'sa'+(sortKey==='liquidity'?' on':'')},arr('liquidity'))),
           React.createElement('th',{className:'r',onClick:function(){toggleSort('spread')}},'Spread ',React.createElement('span',{className:'sa'+(sortKey==='spread'?' on':'')},arr('spread'))),
           React.createElement('th',{className:'r',title:'Daily reward in USDC.',onClick:function(){toggleSort('reward')}},'Reward ',React.createElement('span',{className:'sa'+(sortKey==='reward'?' on':'')},arr('reward'))),
           React.createElement('th',null,'Book'),
