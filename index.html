@@ -243,12 +243,14 @@ function calcScore(a){
   var empt=Math.max(0,Math.min(100,(4000-a.totalVol)/4000*100));
   var sc=a.spread*100;
   var tight=Math.max(0,Math.min(100,(5-sc)/5*100));
-  return Math.round(Math.max(0,Math.min(100,0.4*share+0.4*empt+0.2*tight)));
+  return Math.round(Math.max(0,Math.min(100,0.5*empt+0.3*tight+0.2*share)));
 }
 function scoreCls(s){return s>=70?'g':s>=40?'a':'r'}
-function statusOf(pct){
-  if(pct>75)return{label:'Excellent',cls:'g'};
-  if(pct>=25)return{label:'Good',cls:'a'};
+// Status reflects the SAME thing the filter cares about: total book liquidity.
+// Less money already in the book = our small order is a bigger slice = better.
+function statusOf(vol){
+  if(vol<=1000)return{label:'Excellent',cls:'g'};
+  if(vol<=2500)return{label:'Good',cls:'a'};
   return{label:'Crowded',cls:'r'};
 }
 function recOf(s){
@@ -320,7 +322,7 @@ function Dots5(props){
 }
 
 function StatusBadge(props){
-  var st=statusOf(props.pct);
+  var st=statusOf(props.vol);
   return React.createElement('span',{className:'stb '+st.cls},
     React.createElement('span',{className:'stbd'}),st.label);
 }
@@ -329,8 +331,8 @@ function WhyList(props){
   var a=props.a,rew=props.rew;
   var sc=a.spread*100;
   var items=[
-    {ok:a.pct>=50,t:a.pct>=50?'Strong share ('+a.pct.toFixed(0)+'% of best level)':'Share '+a.pct.toFixed(0)+'% of best level'},
-    {ok:a.totalVol<=1500,t:'Low competition ($'+Math.round(a.totalVol)+' total in book)'},
+    {ok:a.totalVol<=2000,t:'Low competition ($'+Math.round(a.totalVol)+' total in book)'},
+    {ok:a.pct>=10,t:'Your bid is '+a.pct.toFixed(0)+'% of the best level'},
     {ok:sc<=2,t:sc<=2?'Tight spread ('+sc.toFixed(1)+'¢)':'Spread '+sc.toFixed(1)+'¢'},
     {ok:rew>=30,t:'Reward '+(rew>0?rew.toFixed(0):'0')+' USDC/day'}
   ];
@@ -377,7 +379,7 @@ function TableRow(props){
       )
     ),
     React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'scn '+scoreCls(score),style:{fontSize:16}},score)),
-    React.createElement('td',null,React.createElement(StatusBadge,{pct:a.pct})),
+    React.createElement('td',null,React.createElement(StatusBadge,{vol:a.totalVol})),
     React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'mo'},a.pct.toFixed(0)+'%')),
     React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'mo'},'$'+Math.round(a.totalVol))),
     React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'mo'},a.spread>0?(a.spread*100).toFixed(1)+'¢':getSpr(m).toFixed(1)+'¢')),
@@ -397,7 +399,9 @@ function MiniCard(props){
   var obOpen=useState(false);
   var setObOpen=obOpen[1];obOpen=obOpen[0];
   var a=m.analysis,ms=getMs(m),rew=getRew(m);
-  var score=m._score||0;var st=statusOf(a.pct);var rec=recOf(score);var scl=scoreCls(score);
+  var score=m._score||0;var st=statusOf(a.totalVol);var rec=recOf(score);var scl=scoreCls(score);
+  var room=Math.max(0,Math.min(100,(4000-a.totalVol)/4000*100));
+  var roomCol=room>=70?'var(--green)':room>=40?'#f59e0b':'var(--red)';
   var isBest=score>=70;
   var allV=a.bids.concat(a.asks).map(function(l){return l.size*l.price});
   var mx=Math.max.apply(null,allV.concat([0.01]));
@@ -406,7 +410,6 @@ function MiniCard(props){
   var ed=new Date(m.endDate||'');
   var ds=isNaN(ed.getTime())?'—':ed.toLocaleDateString('en-US',{day:'numeric',month:'short'});
   var sc=a.spread*100;
-  var barCol=scl==='g'?'var(--green)':scl==='a'?'#f59e0b':'var(--red)';
   return React.createElement('div',{className:'mc'+(isBest?' best':'')},
     React.createElement('div',{className:'mca'}),
     React.createElement('div',{className:'mch'},
@@ -424,11 +427,11 @@ function MiniCard(props){
       ),
       React.createElement('div',{className:'heroBar'},
         React.createElement('div',{className:'heroBl'},
-          React.createElement('span',null,'Your share of best level'),
-          React.createElement('span',null,a.pct.toFixed(0)+'%')
+          React.createElement('span',null,'Competition room ($'+Math.round(a.totalVol)+' of $4000 in book)'),
+          React.createElement('span',null,room.toFixed(0)+'%')
         ),
         React.createElement('div',{className:'heroBt'},
-          React.createElement('div',{className:'heroBf',style:{width:Math.max(3,Math.min(100,a.pct))+'%',background:barCol}})
+          React.createElement('div',{className:'heroBf',style:{width:Math.max(3,Math.min(100,room))+'%',background:roomCol}})
         )
       )
     ),
