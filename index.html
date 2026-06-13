@@ -335,7 +335,7 @@ function MiniCard(props){
     React.createElement('div',{className:'mca'}),
     React.createElement('div',{className:'mch'},
       React.createElement('span',{className:'cp2'},getCatLabel(m)),
-      React.createElement('span',{style:{fontSize:10,color:isBest?'var(--gd)':'#d97706',fontWeight:600,fontFamily:'var(--mono)'}},ms+'д min')
+      React.createElement('span',{style:{fontSize:10,color:isBest?'var(--gd)':'#d97706',fontWeight:600,fontFamily:'var(--mono)'}},ms+' min')
     ),
     React.createElement('div',{className:'mcq',title:m.question},m.question),
     React.createElement('div',{className:'mcrh'},
@@ -349,7 +349,7 @@ function MiniCard(props){
       )
     ),
     React.createElement('div',{className:'mcgr'},
-      React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Реальный спред'),React.createElement('div',{className:'mcv'},a.spread>0?(a.spread*100).toFixed(1)+'¢':getSpr(m).toFixed(1)+'¢')),
+      React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Real spread'),React.createElement('div',{className:'mcv'},a.spread>0?(a.spread*100).toFixed(1)+'¢':getSpr(m).toFixed(1)+'¢')),
       React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Bid'),React.createElement('div',{className:'mcv'},(a.bestBidPrice*100).toFixed(1)+'¢')),
       React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Your stake'),React.createElement('div',{className:'mcv'},'$'+a.ourStakeUSD.toFixed(2))),
       React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Closes'),React.createElement('div',{className:'mcv dt'},ds))
@@ -361,7 +361,7 @@ function MiniCard(props){
     ),
     a.bids.length>0&&React.createElement('div',null,
       React.createElement('div',{className:'mcobt',onClick:function(){setObOpen(function(o){return !o})}},
-        React.createElement('span',{className:'mcobl'},'Стакан заявок'),
+        React.createElement('span',{className:'mcobl'},'Order book'),
         React.createElement('span',{className:'mcoba'+(obOpen?' open':'')},'▼')
       ),
       obOpen&&React.createElement('div',{className:'mcobb'},
@@ -369,11 +369,11 @@ function MiniCard(props){
           return React.createElement('div',{key:i,className:'mcor'},
             React.createElement('span',{className:'mcop a'},fmt(l.price)),
             React.createElement('div',{className:'mcob2 ask',style:{width:bw(l)+'px'}}),
-            React.createElement('span',{className:'mcos'},l.size.toFixed(0)+'д')
+            React.createElement('span',{className:'mcos'},l.size.toFixed(0))
           );
         }),
-        React.createElement('div',{className:'mcosp'},React.createElement('div',{className:'mcosl'}),React.createElement('span',{className:'mcoss'},'спред '+(a.spread*100).toFixed(1)+'¢'),React.createElement('div',{className:'mcosl'})),
-        React.createElement('div',{className:'mcost'},'Наша ставка: '+ms+'д ($'+a.ourStakeUSD.toFixed(2)+') — '+a.pct.toFixed(0)+'% уровня'),
+        React.createElement('div',{className:'mcosp'},React.createElement('div',{className:'mcosl'}),React.createElement('span',{className:'mcoss'},'spread '+(a.spread*100).toFixed(1)+'¢'),React.createElement('div',{className:'mcosl'})),
+        React.createElement('div',{className:'mcost'},'Your stake: '+ms+' ($'+a.ourStakeUSD.toFixed(2)+') — '+a.pct.toFixed(0)+'% of level'),
         a.bids.slice(0,3).map(function(l,i){
           return React.createElement('div',{key:i,className:'mcor'},
             React.createElement('span',{className:'mcop b'},fmt(l.price)),
@@ -569,14 +569,14 @@ function App(){
         React.createElement('div',{className:'fg'},
           React.createElement('div',{className:'fl'},'Min. stake size'),
           React.createElement('div',{style:{display:'flex',gap:6}},
-            React.createElement('span',{style:{fontSize:13,fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',color:'var(--gt)',padding:'7px 14px',borderRadius:7,border:'1.5px solid #bbf7d0'}},'20д'),
-            React.createElement('span',{style:{fontSize:13,fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',color:'var(--gt)',padding:'7px 14px',borderRadius:7,border:'1.5px solid #bbf7d0'}},'40д'),
-            React.createElement('span',{style:{fontSize:13,fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',color:'var(--gt)',padding:'7px 14px',borderRadius:7,border:'1.5px solid #bbf7d0'}},'50д')
+            React.createElement('span',{style:{fontSize:13,fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',color:'var(--gt)',padding:'7px 14px',borderRadius:7,border:'1.5px solid #bbf7d0'}},'20'),
+            React.createElement('span',{style:{fontSize:13,fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',color:'var(--gt)',padding:'7px 14px',borderRadius:7,border:'1.5px solid #bbf7d0'}},'40'),
+            React.createElement('span',{style:{fontSize:13,fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',color:'var(--gt)',padding:'7px 14px',borderRadius:7,border:'1.5px solid #bbf7d0'}},'50')
           )
         ),
         React.createElement('div',{className:'fdiv'}),
         React.createElement('div',{className:'fg'},
-          React.createElement('div',{className:'fl'},'Фиксированные критерии'),
+          React.createElement('div',{className:'fl'},'Fixed criteria'),
           React.createElement('div',{style:{display:'flex',gap:12,alignItems:'center'}},
             React.createElement('span',{style:{fontSize:12,color:'var(--gd)',fontWeight:600,fontFamily:'var(--mono)',background:'var(--gbg)',padding:'4px 10px',borderRadius:6}},'Reward ≥ 20'),
             React.createElement('span',{style:{fontSize:12,color:'var(--muted)',fontWeight:600,fontFamily:'var(--mono)',background:'#f1f5f9',padding:'4px 10px',borderRadius:6}},'Spread < 5¢'),
@@ -627,11 +627,11 @@ function App(){
           React.createElement('col',{className:'ca'})
         ),
         React.createElement('thead',null,React.createElement('tr',null,
-          React.createElement('th',null,'Рынок'),
+          React.createElement('th',null,'Market'),
           React.createElement('th',{onClick:function(){toggleSort('reward')}},'Reward ',React.createElement('span',{className:'sa'+(sortKey==='reward'?' on':'')},arr('reward'))),
           React.createElement('th',{onClick:function(){toggleSort('spread')}},'Spread ',React.createElement('span',{className:'sa'+(sortKey==='spread'?' on':'')},arr('spread'))),
           React.createElement('th',{onClick:function(){toggleSort('minSize')}},'Min ',React.createElement('span',{className:'sa'+(sortKey==='minSize'?' on':'')},arr('minSize'))),
-          React.createElement('th',null,'Стакан'),
+          React.createElement('th',null,'Book'),
           React.createElement('th',{className:'r',title:'What share of the best level volume our minimum stake takes. Higher % = better position.',onClick:function(){toggleSort('pct')}},'% in book ',React.createElement('span',{className:'sa'+(sortKey==='pct'?' on':'')},arr('pct'))),
           React.createElement('th',{className:'r'})
         )),
