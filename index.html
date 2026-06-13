@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Polymarket Rewards Scanner</title>
+<title>Low Competition Reward Scanner</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
@@ -13,7 +13,7 @@
 :root{
   --bg:#f0f4f8;--card:#fff;--border:#e2e8f0;--text:#0f172a;--muted:#475569;--hint:#94a3b8;
   --green:#10b981;--gd:#059669;--gbg:#d1fae5;--gt:#065f46;
-  --abg:#fef3c7;--at:#92400e;--red:#ef4444;--slate:#0f172a;--blue:#4f46e5;
+  --abg:#fef3c7;--at:#92400e;--red:#ef4444;--rbg:#fee2e2;--rt:#991b1b;--slate:#0f172a;--blue:#4f46e5;
   --font:'DM Sans',sans-serif;--mono:'JetBrains Mono',monospace;
   --r:10px;--rs:7px;--sh:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.04);
 }
@@ -39,22 +39,29 @@ body{min-height:100vh}
 .tb:hover:not(.on){border-color:#94a3b8}
 .sr{display:flex;align-items:center;gap:12px}
 .sv{font-size:13px;font-weight:700;color:var(--text);font-family:var(--mono);min-width:52px}
-input[type=range]{-webkit-appearance:none;appearance:none;width:140px;height:6px;border-radius:3px;background:var(--border);outline:none;cursor:pointer}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--slate);border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25);cursor:pointer}
-input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--slate);border:3px solid #fff;cursor:pointer}
 .fdiv{width:1px;height:40px;background:var(--border)}
 .fright{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
 .ct{font-size:13px;color:var(--muted)}.ct strong{color:var(--text);font-weight:700}
 .upd{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--hint);font-family:var(--mono)}
 .spin{width:9px;height:9px;border:1.5px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+/* Why these markets summary */
+.wsum{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:16px;box-shadow:var(--sh)}
+.wst{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.wsi{display:flex;flex-direction:column;gap:2px;min-width:0}
+.wsv{font-size:20px;font-weight:700;font-family:var(--mono);color:var(--text);letter-spacing:-.5px}
+.wsv.g{color:var(--gd)}
+.wsl{font-size:10px;color:var(--hint);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.wsq{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wsnote{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5;border-top:.5px solid var(--border);padding-top:10px}
+.wsnote b{color:var(--text)}
 .mbar{display:flex;align-items:center;gap:8px;margin-bottom:14px}
 .mb{padding:7px 16px;border-radius:var(--rs);font-size:13px;font-weight:600;border:1.5px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-family:var(--font);transition:all .12s}
 .mb.on{background:var(--slate);color:#fff;border-color:var(--slate)}
 .sh{font-size:11px;color:var(--hint);margin-left:auto}
 .tw{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
 table{width:100%;border-collapse:collapse;table-layout:fixed}
-col.cm{width:36%}col.cr{width:8%}col.cs{width:7%}col.cn{width:6%}col.co{width:12%}col.cp{width:8%}col.ca{width:10%}
+col.cm{width:28%}col.csc{width:7%}col.cst{width:11%}col.csh{width:7%}col.cliq{width:9%}col.csp{width:8%}col.crw{width:6%}col.cbk{width:11%}col.copn{width:13%}
 thead th{font-size:10px;font-weight:600;color:var(--hint);text-align:left;padding:10px 12px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;user-select:none;cursor:pointer;background:var(--card)}
 thead th:hover{color:var(--text)}thead th.r{text-align:right}
 .sa{margin-left:3px;font-size:9px;opacity:.4}.sa.on{opacity:1}
@@ -65,6 +72,22 @@ tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 .qw{display:flex;align-items:flex-start;gap:7px}
 .qt{font-weight:500;font-size:13px;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
 .mo{font-family:var(--mono);font-size:12px}.g{color:var(--gd);font-weight:600}
+/* score number */
+.scn{font-family:var(--mono);font-weight:700;letter-spacing:-.5px}
+.scn.g{color:var(--gd)}.scn.a{color:#d97706}.scn.r{color:var(--red)}
+/* status badge */
+.stb{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.stb.g{background:var(--gbg);color:var(--gt)}
+.stb.a{background:var(--abg);color:var(--at)}
+.stb.r{background:var(--rbg);color:var(--rt)}
+.stbd{width:7px;height:7px;border-radius:50%}
+.stb.g .stbd{background:var(--green)}.stb.a .stbd{background:#f59e0b}.stb.r .stbd{background:var(--red)}
+/* recommendation pill */
+.rec{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.rec.g{background:var(--gbg);color:var(--gt)}
+.rec.a{background:var(--abg);color:var(--at)}
+.rec.n{background:#f1f5f9;color:var(--muted)}
+.tdo{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
 .d5w{display:flex;gap:3px;align-items:center}
 .d5{width:8px;height:8px;border-radius:50%}.d5.on{background:var(--green)}.d5.off{background:#e2e8f0}
 .obc{display:flex;align-items:center;gap:2px;height:20px}
@@ -72,9 +95,6 @@ tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 .oba2{display:flex;align-items:center;gap:1px}
 .obm{width:1px;height:14px;background:var(--border);flex-shrink:0;margin:0 2px}
 .obs{height:12px;border-radius:2px;flex-shrink:0}.obs.bid{background:#6ee7b7}.obs.ask{background:#fca5a5}
-.swp{display:flex;flex-direction:column;align-items:center;gap:1px}
-.sm{width:2px;height:8px;background:var(--blue);border-radius:1px;position:relative}
-.sm::before{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:4px solid var(--blue)}
 .ch{font-size:11px;font-weight:700;font-family:var(--mono);padding:3px 9px;border-radius:20px;white-space:nowrap}
 .ch.g{background:var(--gbg);color:var(--gt)}.ch.a{background:var(--abg);color:var(--at)}
 .obtn{display:inline-flex;align-items:center;gap:4px;padding:6px 13px;background:var(--green);color:#fff;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap;border:none;cursor:pointer;font-family:var(--font);transition:background .12s}
@@ -86,12 +106,23 @@ tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 .mc.best .mca{height:3px;background:var(--green);flex-shrink:0}.mc:not(.best) .mca{display:none}
 .mch{display:flex;justify-content:space-between;align-items:center;padding:12px 14px 0}
 .mcq{padding:6px 14px 0;font-size:14px;font-weight:600;color:var(--text);line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:42px}
-.mcrh{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;margin:8px 14px 0;background:#f0fdf8;border-radius:var(--rs);border:1px solid #bbf7d0}
-.mcrv{font-size:22px;font-weight:700;color:var(--gd);font-family:var(--mono);letter-spacing:-0.5px}
-.mcrl{font-size:10px;color:var(--gd);font-weight:600;text-transform:uppercase;letter-spacing:.06em;opacity:.8}
-.mcsb{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
-.mcsn{font-size:18px;font-weight:700;font-family:var(--mono)}.mcsn.g{color:var(--gd)}.mcsn.a{color:#d97706}
-.mcsl{font-size:9px;color:var(--hint);text-align:right;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+/* hero score block */
+.hero{margin:8px 14px 0;padding:12px 14px;background:#f8fafc;border:1px solid var(--border);border-radius:var(--rs)}
+.heroT{display:flex;align-items:flex-start;justify-content:space-between}
+.heroS{display:flex;flex-direction:column;gap:2px}
+.heroSl{font-size:10px;color:var(--hint);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.heroSv{font-size:32px;font-weight:700;font-family:var(--mono);line-height:1;letter-spacing:-1.5px}
+.heroBar{margin-top:11px}
+.heroBl{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:4px;font-weight:600}
+.heroBt{height:8px;border-radius:4px;background:#e2e8f0;overflow:hidden}
+.heroBf{height:100%;border-radius:4px}
+/* why this market */
+.why{padding:10px 14px 4px}
+.whyt{font-size:10px;color:var(--hint);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px}
+.whyi{display:flex;align-items:center;gap:8px;font-size:12px;padding:2px 0;color:var(--text)}
+.whyc{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.whyc.on{background:var(--gbg);color:var(--gt)}
+.whyc.off{background:#f1f5f9;color:var(--hint)}
 .mcgr{display:grid;grid-template-columns:1fr 1fr;padding:10px 14px 4px}
 .mcc{display:flex;flex-direction:column;gap:2px;padding:6px 0;border-bottom:.5px solid var(--border)}
 .mcc:nth-child(odd){padding-right:12px;border-right:.5px solid var(--border)}
@@ -113,8 +144,9 @@ tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 .mcost{font-size:10px;font-weight:600;color:var(--blue);padding:3px 0;border-top:1.5px dashed var(--blue);border-bottom:1.5px dashed var(--blue);margin:4px 0}
 .mcosp{display:flex;align-items:center;gap:5px;padding:3px 0}
 .mcosl{flex:1;height:.5px;background:var(--border)}.mcoss{font-size:9px;font-family:var(--mono);color:var(--hint)}
-.mcf{padding:10px 14px 12px;margin-top:auto}
-.ofbtn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:11px;background:var(--green);color:#fff;border-radius:var(--rs);font-size:14px;font-weight:600;text-decoration:none;border:none;cursor:pointer;font-family:var(--font);transition:background .12s}
+.mcf2{display:flex;align-items:center;gap:10px;padding:10px 14px 12px;margin-top:auto}
+.mcf2 .ofbtn{flex:1}
+.ofbtn{display:flex;align-items:center;justify-content:center;gap:6px;padding:11px;background:var(--green);color:#fff;border-radius:var(--rs);font-size:14px;font-weight:600;text-decoration:none;border:none;cursor:pointer;font-family:var(--font);transition:background .12s}
 .ofbtn:hover{background:var(--gd)}
 .sk{background:linear-gradient(90deg,#e2e8f0 25%,#f1f5f9 50%,#e2e8f0 75%);background-size:200% 100%;animation:sh2 1.4s infinite;border-radius:4px}
 @keyframes sh2{0%{background-position:200% 0}100%{background-position:-200% 0}}
@@ -124,7 +156,7 @@ tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 .ss{font-size:13px;color:var(--muted);max-width:420px;line-height:1.6}
 .rb{padding:9px 22px;background:var(--slate);color:#fff;border:none;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)}
 .pm{text-align:center;padding:16px 0 8px;font-size:13px;color:var(--muted);font-family:var(--mono)}
-@media(max-width:640px){.app{padding:12px 10px}.fdiv{display:none}.fpr{gap:12px}input[type=range]{width:100px}.cg{grid-template-columns:1fr}}
+@media(max-width:640px){.app{padding:12px 10px}.fdiv{display:none}.fpr{gap:12px}.cg{grid-template-columns:1fr}.wst{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -167,9 +199,7 @@ function getCat(m){
 function getCatLabel(m){
   var c=getCat(m).toLowerCase();
   if(CATS[c])return CATS[c];
-  // Try partial match
   for(var k in CATS){if(c.indexOf(k)!==-1)return CATS[k];}
-  // Guess from question keywords
   var q=(m.question||'').toLowerCase();
   if(q.indexOf('bitcoin')+q.indexOf('eth')+q.indexOf('crypto')+q.indexOf('token')+q.indexOf('btc')>-4)return 'Crypto';
   if(q.indexOf('nba')+q.indexOf('nfl')+q.indexOf('mlb')+q.indexOf('nhl')+q.indexOf('soccer')>-4)return 'Sports';
@@ -185,29 +215,46 @@ function compLvl(m){
   if(l<300)return 1;if(l<2000)return 2;if(l<10000)return 3;if(l<50000)return 4;return 5;
 }
 function analyzeBook(tid,book,ms){
-  var empty={tokenId:tid,bestBidPrice:0,bestAskPrice:0,spread:0,topBidVolume:0,ourStakeUSD:0,pct:0,hasDom:false,ok:false,bids:[],asks:[],stakeLevel:0};
+  var empty={tokenId:tid,bestBidPrice:0,bestAskPrice:0,spread:0,topBidVolume:0,ourStakeUSD:0,pct:0,totalVol:0,ok:false,bids:[],asks:[]};
   if(!book||!book.bids||!book.bids.length||!book.asks||!book.asks.length)return empty;
   var bids=book.bids.filter(function(b){return b.price>0&&b.size>0}).sort(function(a,b){return b.price-a.price});
   var asks=book.asks.filter(function(a){return a.price>0&&a.size>0}).sort(function(a,b){return a.price-b.price});
   if(!bids.length||!asks.length)return empty;
   var bb=bids[0],ba=asks[0];
-  var vol=bb.size*bb.price,stake=ms*bb.price;
-  var pct=vol>0?(stake/vol)*100:0;
-  var hasDom=bids.some(function(b){return b.size*b.price>500});
+  // totalVol = sum of (size * price) across EVERY level, both bids and asks.
+  // This is the core competition filter: the more money already sitting in the
+  // book, the smaller our slice of the daily reward. Cap at $4000.
+  var bidVol=bids.reduce(function(s,l){return s+l.size*l.price},0);
+  var askVol=asks.reduce(function(s,l){return s+l.size*l.price},0);
+  var totalVol=bidVol+askVol;
+  var topBidVolume=bb.size*bb.price;
+  var stake=ms*bb.price;
+  var pct=topBidVolume>0?(stake/topBidVolume)*100:0;
   var spreadCents=(ba.price-bb.price)*100;
-  // Minimum volume on best bid level must be at least $5 to be meaningful
-  // Our stake must be meaningful in the order book
-  // maxVol = max total volume on best bid level
-  // minPct = our stake must be at least this % of that volume
-  // For minSize=20: stake ~$4-14, meaningful if vol < $200
-  // For minSize=40: stake ~$8-28, meaningful if vol < $400  
-  // For minSize=50: stake ~$25-50, meaningful if vol < $500
-  var maxVol=ms<=20?200:ms<=40?400:500;
-  var minPct=10; // our stake must be at least 10% of best level
-  var ok=vol>=1&&vol<maxVol&&pct>=minPct&&pct<=100&&!hasDom&&spreadCents<5;
+  var ok=totalVol>=10&&totalVol<=4000&&pct>=5&&pct<=100&&spreadCents<5;
   return{tokenId:tid,bestBidPrice:bb.price,bestAskPrice:ba.price,
-    spread:ba.price-bb.price,topBidVolume:vol,ourStakeUSD:stake,pct:pct,hasDom:hasDom,
-    ok:ok,bids:bids.slice(0,5),asks:asks.slice(0,5),stakeLevel:0};
+    spread:ba.price-bb.price,topBidVolume:topBidVolume,ourStakeUSD:stake,pct:pct,totalVol:totalVol,
+    ok:ok,bids:bids.slice(0,5),asks:asks.slice(0,5)};
+}
+// Opportunity score 0-100, built around COMPETITION (not reward).
+function calcScore(a){
+  if(!a||!a.ok)return 0;
+  var share=Math.max(0,Math.min(100,a.pct));
+  var empt=Math.max(0,Math.min(100,(4000-a.totalVol)/4000*100));
+  var sc=a.spread*100;
+  var tight=Math.max(0,Math.min(100,(5-sc)/5*100));
+  return Math.round(Math.max(0,Math.min(100,0.4*share+0.4*empt+0.2*tight)));
+}
+function scoreCls(s){return s>=70?'g':s>=40?'a':'r'}
+function statusOf(pct){
+  if(pct>75)return{label:'Excellent',cls:'g'};
+  if(pct>=25)return{label:'Good',cls:'a'};
+  return{label:'Crowded',cls:'r'};
+}
+function recOf(s){
+  if(s>=70)return{label:'Recommended',cls:'g'};
+  if(s>=40)return{label:'Worth checking',cls:'a'};
+  return{label:'Low priority',cls:'n'};
 }
 function getTokens(m){
   var tokens=m.tokens||[];
@@ -236,7 +283,6 @@ async function fetchAllMarkets(setMsg){
     if(!res.ok)throw new Error('API error: '+res.status);
     var page=await res.json();
     if(!Array.isArray(page)||page.length===0){done=true;break;}
-    // flatten: each event has nested markets[]
     for(var i=0;i<page.length;i++){
       var ev=page[i];
       var mkts=ev.markets||[];
@@ -273,6 +319,31 @@ function Dots5(props){
   );
 }
 
+function StatusBadge(props){
+  var st=statusOf(props.pct);
+  return React.createElement('span',{className:'stb '+st.cls},
+    React.createElement('span',{className:'stbd'}),st.label);
+}
+
+function WhyList(props){
+  var a=props.a,rew=props.rew;
+  var sc=a.spread*100;
+  var items=[
+    {ok:a.pct>=50,t:a.pct>=50?'Strong share ('+a.pct.toFixed(0)+'% of best level)':'Share '+a.pct.toFixed(0)+'% of best level'},
+    {ok:a.totalVol<=1500,t:'Low competition ($'+Math.round(a.totalVol)+' total in book)'},
+    {ok:sc<=2,t:sc<=2?'Tight spread ('+sc.toFixed(1)+'¢)':'Spread '+sc.toFixed(1)+'¢'},
+    {ok:rew>=30,t:'Reward '+(rew>0?rew.toFixed(0):'0')+' USDC/day'}
+  ];
+  return React.createElement('div',{className:'why'},
+    React.createElement('div',{className:'whyt'},'Why this market?'),
+    items.map(function(it,i){
+      return React.createElement('div',{className:'whyi',key:i},
+        React.createElement('span',{className:'whyc '+(it.ok?'on':'off')},it.ok?'✓':'•'),
+        it.t);
+    })
+  );
+}
+
 function MiniOB(props){
   var bids=props.bids,asks=props.asks;
   if(!bids.length&&!asks.length)return React.createElement('span',{style:{fontSize:10,color:'var(--hint)'}},'-');
@@ -283,9 +354,7 @@ function MiniOB(props){
   return React.createElement('div',{className:'obc'},
     React.createElement('div',{className:'obb'},
       t3b.slice().reverse().map(function(l,i){
-        return React.createElement('div',{key:i,className:'swp'},
-          React.createElement('div',{className:'obs bid',style:{width:bw(l)+'px'}})
-        );
+        return React.createElement('div',{key:i,className:'obs bid',style:{width:bw(l)+'px'}});
       })
     ),
     React.createElement('div',{className:'obm'}),
@@ -299,8 +368,7 @@ function MiniOB(props){
 
 function TableRow(props){
   var m=props.m,a=m.analysis;
-  var chipCls=a.pct>=19?'ch g':'ch a';
-  var rew=getRew(m);
+  var rew=getRew(m);var score=m._score||0;var rec=recOf(score);
   return React.createElement('tr',null,
     React.createElement('td',null,
       React.createElement('div',{className:'qw'},
@@ -308,13 +376,18 @@ function TableRow(props){
         React.createElement('span',{className:'qt',title:m.question},m.question)
       )
     ),
-    React.createElement('td',null,React.createElement('span',{className:'mo g'},rew>0?rew.toFixed(0):'—')),
-    React.createElement('td',null,React.createElement('span',{className:'mo'},a.spread>0?(a.spread*100).toFixed(1)+'¢':getSpr(m).toFixed(1)+'¢')),
-    React.createElement('td',null,React.createElement('span',{className:'mo'},getMs(m))),
+    React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'scn '+scoreCls(score),style:{fontSize:16}},score)),
+    React.createElement('td',null,React.createElement(StatusBadge,{pct:a.pct})),
+    React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'mo'},a.pct.toFixed(0)+'%')),
+    React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'mo'},'$'+Math.round(a.totalVol))),
+    React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'mo'},a.spread>0?(a.spread*100).toFixed(1)+'¢':getSpr(m).toFixed(1)+'¢')),
+    React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'mo',style:{color:'var(--hint)'}},rew>0?rew.toFixed(0):'—')),
     React.createElement('td',null,React.createElement(MiniOB,{bids:a.bids,asks:a.asks})),
-    React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:chipCls},a.pct.toFixed(0)+'%')),
-    React.createElement('td',{style:{textAlign:'right'}},
-      React.createElement('a',{className:'obtn',href:buildUrl(m),target:'_blank',rel:'noopener noreferrer'},'Open ↗')
+    React.createElement('td',null,
+      React.createElement('div',{className:'tdo'},
+        React.createElement('span',{className:'rec '+rec.cls,style:{fontSize:9,padding:'2px 7px'}},rec.label),
+        React.createElement('a',{className:'obtn',href:buildUrl(m),target:'_blank',rel:'noopener noreferrer'},'Open ↗')
+      )
     )
   );
 }
@@ -324,40 +397,54 @@ function MiniCard(props){
   var obOpen=useState(false);
   var setObOpen=obOpen[1];obOpen=obOpen[0];
   var a=m.analysis,ms=getMs(m),rew=getRew(m);
-  var isBest=a.pct>=19;
+  var score=m._score||0;var st=statusOf(a.pct);var rec=recOf(score);var scl=scoreCls(score);
+  var isBest=score>=70;
   var allV=a.bids.concat(a.asks).map(function(l){return l.size*l.price});
   var mx=Math.max.apply(null,allV.concat([0.01]));
   var bw=function(l){return Math.max(5,Math.min(80,(l.size*l.price/mx)*80))};
   var fmt=function(n){return n<0.01?n.toFixed(4):n<1?n.toFixed(3):n.toFixed(2)};
   var ed=new Date(m.endDate||'');
   var ds=isNaN(ed.getTime())?'—':ed.toLocaleDateString('en-US',{day:'numeric',month:'short'});
+  var sc=a.spread*100;
+  var barCol=scl==='g'?'var(--green)':scl==='a'?'#f59e0b':'var(--red)';
   return React.createElement('div',{className:'mc'+(isBest?' best':'')},
     React.createElement('div',{className:'mca'}),
     React.createElement('div',{className:'mch'},
       React.createElement('span',{className:'cp2'},getCatLabel(m)),
-      React.createElement('span',{style:{fontSize:10,color:isBest?'var(--gd)':'#d97706',fontWeight:600,fontFamily:'var(--mono)'}},ms+' min')
+      React.createElement('span',{style:{fontSize:10,color:'var(--hint)',fontWeight:600,fontFamily:'var(--mono)'}},ms+' min stake')
     ),
     React.createElement('div',{className:'mcq',title:m.question},m.question),
-    React.createElement('div',{className:'mcrh'},
-      React.createElement('div',null,
-        React.createElement('div',{className:'mcrl'},'Reward'),
-        React.createElement('div',{className:'mcrv'},rew>0?rew.toFixed(0):'—')
+    React.createElement('div',{className:'hero'},
+      React.createElement('div',{className:'heroT'},
+        React.createElement('div',{className:'heroS'},
+          React.createElement('div',{className:'heroSl'},'Opportunity score'),
+          React.createElement('div',{className:'heroSv scn '+scl},score)
+        ),
+        React.createElement('span',{className:'stb '+st.cls},React.createElement('span',{className:'stbd'}),st.label)
       ),
-      React.createElement('div',{className:'mcsb'},
-        React.createElement('div',{className:'mcsn '+(isBest?'g':'a')},a.pct.toFixed(0)+'%'),
-        React.createElement('div',{className:'mcsl'},'share in book')
+      React.createElement('div',{className:'heroBar'},
+        React.createElement('div',{className:'heroBl'},
+          React.createElement('span',null,'Your share of best level'),
+          React.createElement('span',null,a.pct.toFixed(0)+'%')
+        ),
+        React.createElement('div',{className:'heroBt'},
+          React.createElement('div',{className:'heroBf',style:{width:Math.max(3,Math.min(100,a.pct))+'%',background:barCol}})
+        )
       )
     ),
+    React.createElement(WhyList,{a:a,rew:rew}),
     React.createElement('div',{className:'mcgr'},
-      React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Real spread'),React.createElement('div',{className:'mcv'},a.spread>0?(a.spread*100).toFixed(1)+'¢':getSpr(m).toFixed(1)+'¢')),
-      React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Bid'),React.createElement('div',{className:'mcv'},(a.bestBidPrice*100).toFixed(1)+'¢')),
+      React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Real spread'),React.createElement('div',{className:'mcv'},sc>0?sc.toFixed(1)+'¢':getSpr(m).toFixed(1)+'¢')),
+      React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Best bid'),React.createElement('div',{className:'mcv'},(a.bestBidPrice*100).toFixed(1)+'¢')),
       React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Your stake'),React.createElement('div',{className:'mcv'},'$'+a.ourStakeUSD.toFixed(2))),
+      React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Book liquidity'),React.createElement('div',{className:'mcv'},'$'+Math.round(a.totalVol))),
+      React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Reward / day'),React.createElement('div',{className:'mcv'},rew>0?rew.toFixed(0):'—')),
       React.createElement('div',{className:'mcc'},React.createElement('div',{className:'mck'},'Closes'),React.createElement('div',{className:'mcv dt'},ds))
     ),
     React.createElement('div',{className:'mcsep'}),
     React.createElement('div',{className:'mccmp'},
       React.createElement(Dots5,{level:m._cl}),
-      React.createElement('span',{className:'cml'},COMP[m._cl])
+      React.createElement('span',{className:'cml'},'Market size: '+COMP[m._cl])
     ),
     a.bids.length>0&&React.createElement('div',null,
       React.createElement('div',{className:'mcobt',onClick:function(){setObOpen(function(o){return !o})}},
@@ -372,18 +459,19 @@ function MiniCard(props){
             React.createElement('span',{className:'mcos'},l.size.toFixed(0))
           );
         }),
-        React.createElement('div',{className:'mcosp'},React.createElement('div',{className:'mcosl'}),React.createElement('span',{className:'mcoss'},'spread '+(a.spread*100).toFixed(1)+'¢'),React.createElement('div',{className:'mcosl'})),
-        React.createElement('div',{className:'mcost'},'Your stake: '+ms+' ($'+a.ourStakeUSD.toFixed(2)+') — '+a.pct.toFixed(0)+'% of level'),
+        React.createElement('div',{className:'mcosp'},React.createElement('div',{className:'mcosl'}),React.createElement('span',{className:'mcoss'},'spread '+sc.toFixed(1)+'¢'),React.createElement('div',{className:'mcosl'})),
+        React.createElement('div',{className:'mcost'},'Your stake: '+ms+' ($'+a.ourStakeUSD.toFixed(2)+') — '+a.pct.toFixed(0)+'% of best level'),
         a.bids.slice(0,3).map(function(l,i){
           return React.createElement('div',{key:i,className:'mcor'},
             React.createElement('span',{className:'mcop b'},fmt(l.price)),
             React.createElement('div',{className:'mcob2 bid',style:{width:bw(l)+'px'}}),
-            React.createElement('span',{className:'mcos'},l.size.toFixed(0)+'д')
+            React.createElement('span',{className:'mcos'},l.size.toFixed(0))
           );
         })
       )
     ),
-    React.createElement('div',{className:'mcf',style:{marginTop:'auto'}},
+    React.createElement('div',{className:'mcf2'},
+      React.createElement('span',{className:'rec '+rec.cls},rec.label),
       React.createElement('a',{className:'ofbtn',href:buildUrl(m),target:'_blank',rel:'noopener noreferrer'},'Open market ↗')
     )
   );
@@ -395,7 +483,7 @@ function SkTbl(){
       React.createElement('tbody',null,
         [0,1,2,3,4,5,6,7].map(function(i){
           return React.createElement('tr',{key:i},
-            [280,60,50,40,80,50,80].map(function(w,j){
+            [280,50,90,50,70,60,50,80,90].map(function(w,j){
               return React.createElement('td',{key:j},React.createElement('div',{className:'sk',style:{height:12,width:w}}));
             })
           );
@@ -412,7 +500,7 @@ function SkCards(){
         React.createElement('div',{className:'sk',style:{height:9,width:'35%',marginBottom:8}}),
         React.createElement('div',{className:'sk',style:{height:14,width:'95%',marginBottom:4}}),
         React.createElement('div',{className:'sk',style:{height:14,width:'80%',marginBottom:12}}),
-        React.createElement('div',{className:'sk',style:{height:56,borderRadius:6,marginBottom:10}}),
+        React.createElement('div',{className:'sk',style:{height:72,borderRadius:6,marginBottom:10}}),
         React.createElement('div',{className:'sk',style:{height:38,borderRadius:6}})
       );
     })
@@ -420,10 +508,8 @@ function SkCards(){
 }
 
 function App(){
-  var fs=useState({});
-  var filters=fs[0],setFilters=fs[1];
-  var ms=useState('table');var mode=ms[0],setMode=ms[1];
-  var sk=useState('reward');var sortKey=sk[0],setSortKey=sk[1];
+  var ms2=useState('table');var mode=ms2[0],setMode=ms2[1];
+  var sk=useState('score');var sortKey=sk[0],setSortKey=sk[1];
   var sd=useState(-1);var sortDir=sd[0],setSortDir=sd[1];
   var rm=useState([]);var rawMarkets=rm[0],setRaw=rm[1];
   var bk=useState({});var books=bk[0],setBooks=bk[1];
@@ -455,7 +541,6 @@ function App(){
     return (async function(){
       if(!markets.length)return;
       setRefetching(true);
-      // Load books in batches of 10 to avoid rate limits
       var BATCH=10;
       for(var i=0;i<Math.min(markets.length,1000);i+=BATCH){
         var batch=markets.slice(i,i+BATCH);
@@ -468,14 +553,13 @@ function App(){
             setBooks(function(p){var n=Object.assign({},p);n[tok.tokenId]=b;return n});
           }catch(e){}
         }));
-        // small pause between batches to respect rate limits
         await new Promise(function(r){setTimeout(r,100)});
       }
       setRefetching(false);
     })();
   },[]);
 
-  // Pre-filter markets before loading books — only candidates that pass rewards/spread/size
+  // Pre-filter markets before loading books - only candidates that pass rewards/spread/size
   var preFiltered=useMemo(function(){
     return rawMarkets.filter(function(m){
       if(isExcl(m))return false;
@@ -489,7 +573,6 @@ function App(){
 
   useEffect(function(){
     if(preFiltered.length){
-      // Interleave: take markets by minSize groups equally so 20/40/50 all get checked
       var ms20=preFiltered.filter(function(m){return getMs(m)===20});
       var ms40=preFiltered.filter(function(m){return getMs(m)===40});
       var ms50=preFiltered.filter(function(m){return getMs(m)===50});
@@ -521,32 +604,51 @@ function App(){
       var tid=tok&&tok.tokenId?tok.tokenId:'';
       var book=tid&&books[tid]?books[tid]:{bids:[],asks:[]};
       var analysis=analyzeBook(tid,book,getMs(m));
-      return Object.assign({},m,{_cl:compLvl(m),analysis:analysis,_tid:tid});
+      return Object.assign({},m,{_cl:compLvl(m),analysis:analysis,_tid:tid,_score:calcScore(analysis)});
     }).filter(function(m){
-      // KEY: show only markets where our stake is significant in the order book
+      // KEY: show only markets where total book liquidity is small enough
+      // that our stake is a meaningful slice (totalVol <= 4000).
       if(!booksLoaded)return true;       // books still loading - show all
-      // Only show if book is loaded AND passes order book check
       if(!books[m._tid])return false;    // book not loaded yet - hide until loaded
-      return m.analysis.ok;             // must pass order book check
+      return m.analysis.ok;              // must pass order book check
     });
   },[rawMarkets,books,booksLoaded]);
 
   var sorted=useMemo(function(){
     var fn={
+      score:function(m){return m._score||0},
       reward:function(m){return getRew(m)},
       spread:function(m){return m.analysis&&m.analysis.spread>0?-m.analysis.spread*100:-getSpr(m)},
       minSize:function(m){return getMs(m)},
       pct:function(m){return m.analysis.pct},
+      liquidity:function(m){return -(m.analysis.totalVol||0)},
     };
-    var f=fn[sortKey]||fn.reward;
+    var f=fn[sortKey]||fn.score;
     return processed.slice().sort(function(a,b){return sortDir*(f(b)-f(a))});
   },[processed,sortKey,sortDir]);
+
+  var summary=useMemo(function(){
+    var n=sorted.length;
+    if(!n)return null;
+    var sumShare=0,sumRew=0,best=null,bestScore=-1;
+    for(var i=0;i<sorted.length;i++){
+      var m=sorted[i];
+      sumShare+=m.analysis.pct;sumRew+=getRew(m);
+      if((m._score||0)>bestScore){bestScore=m._score||0;best=m;}
+    }
+    return{n:n,avgShare:Math.round(sumShare/n),avgRew:Math.round(sumRew/n),best:best};
+  },[sorted]);
 
   function toggleSort(k){
     if(sortKey===k)setSortDir(function(d){return -d});
     else{setSortKey(k);setSortDir(-1);}
   }
   function arr(k){return sortKey===k?(sortDir===-1?'↓':'↑'):'↕'}
+
+  var msBadge={fontSize:13,fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',color:'var(--gt)',padding:'7px 14px',borderRadius:7,border:'1.5px solid #bbf7d0'};
+  var critOn={fontSize:12,color:'var(--gt)',fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',padding:'5px 11px',borderRadius:6,border:'1.5px solid #bbf7d0'};
+  var critOff={fontSize:12,color:'var(--muted)',fontWeight:600,fontFamily:'var(--mono)',background:'#f1f5f9',padding:'5px 10px',borderRadius:6};
+  var rewBadge={fontSize:12,color:'var(--hint)',fontWeight:600,fontFamily:'var(--mono)',background:'#f8fafc',padding:'5px 10px',borderRadius:6,border:'1px solid var(--border)'};
 
   return React.createElement('div',{className:'app'},
     React.createElement('div',{className:'hdr'},
@@ -558,30 +660,33 @@ function App(){
           )
         ),
         React.createElement('div',null,
-          React.createElement('div',{className:'aname'},'Polymarket Rewards Scanner'),
-          React.createElement('div',{className:'asub'},'Market scanner for liquidity providers')
+          React.createElement('div',{className:'aname'},'Low Competition Reward Scanner'),
+          React.createElement('div',{className:'asub'},'Find undercrowded markets where small bids still win')
         )
       ),
-      React.createElement('div',{className:'lpill'},React.createElement('div',{className:'ldot'}),'Live · 30s')
+      React.createElement('div',{className:'lpill'},React.createElement('div',{className:'ldot'}),'Live · 60s')
     ),
     React.createElement('div',{className:'fp'},
       React.createElement('div',{className:'fpr'},
         React.createElement('div',{className:'fg'},
           React.createElement('div',{className:'fl'},'Min. stake size'),
           React.createElement('div',{style:{display:'flex',gap:6}},
-            React.createElement('span',{style:{fontSize:13,fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',color:'var(--gt)',padding:'7px 14px',borderRadius:7,border:'1.5px solid #bbf7d0'}},'20'),
-            React.createElement('span',{style:{fontSize:13,fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',color:'var(--gt)',padding:'7px 14px',borderRadius:7,border:'1.5px solid #bbf7d0'}},'40'),
-            React.createElement('span',{style:{fontSize:13,fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',color:'var(--gt)',padding:'7px 14px',borderRadius:7,border:'1.5px solid #bbf7d0'}},'50')
+            [20,40,50].map(function(v){return React.createElement('span',{key:v,style:msBadge},''+v)})
           )
         ),
         React.createElement('div',{className:'fdiv'}),
         React.createElement('div',{className:'fg'},
-          React.createElement('div',{className:'fl'},'Fixed criteria'),
-          React.createElement('div',{style:{display:'flex',gap:12,alignItems:'center'}},
-            React.createElement('span',{style:{fontSize:12,color:'var(--gd)',fontWeight:600,fontFamily:'var(--mono)',background:'var(--gbg)',padding:'4px 10px',borderRadius:6}},'Reward ≥ 20'),
-            React.createElement('span',{style:{fontSize:12,color:'var(--muted)',fontWeight:600,fontFamily:'var(--mono)',background:'#f1f5f9',padding:'4px 10px',borderRadius:6}},'Spread < 5¢'),
-            React.createElement('span',{style:{fontSize:12,color:'var(--muted)',fontWeight:600,fontFamily:'var(--mono)',background:'#f1f5f9',padding:'4px 10px',borderRadius:6}},'Share ≥ 5%')
+          React.createElement('div',{className:'fl'},'Competition filter'),
+          React.createElement('div',{style:{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}},
+            React.createElement('span',{title:'Sum of every order in the book, both buy and sell. Lower = your small bid is a bigger slice of the reward.',style:critOn},'Book liquidity $10–$4000'),
+            React.createElement('span',{title:'Your minimum stake as a share of the best bid level.',style:critOff},'Your share ≥ 5%'),
+            React.createElement('span',{style:critOff},'Spread < 5¢')
           )
+        ),
+        React.createElement('div',{className:'fdiv'}),
+        React.createElement('div',{className:'fg'},
+          React.createElement('div',{className:'fl'},'Reward'),
+          React.createElement('span',{style:rewBadge},'≥ 20 USDC/day')
         ),
         React.createElement('div',{className:'fright'},
           React.createElement('div',{className:'ct'},'Found: ',React.createElement('strong',null,loading?'…':sorted.length),' of ',rawMarkets.length),
@@ -600,10 +705,19 @@ function App(){
         )
       )
     ),
+    !loading&&!error&&summary&&React.createElement('div',{className:'wsum'},
+      React.createElement('div',{className:'wst'},
+        React.createElement('div',{className:'wsi'},React.createElement('div',{className:'wsv g'},''+summary.n),React.createElement('div',{className:'wsl'},'Opportunities found')),
+        React.createElement('div',{className:'wsi'},React.createElement('div',{className:'wsv'},summary.avgShare+'%'),React.createElement('div',{className:'wsl'},'Average share')),
+        React.createElement('div',{className:'wsi'},React.createElement('div',{className:'wsv'},summary.avgRew+'/day'),React.createElement('div',{className:'wsl'},'Average reward')),
+        React.createElement('div',{className:'wsi'},React.createElement('div',{className:'wsq',title:summary.best.question},getCatLabel(summary.best)+' · '+summary.best.question),React.createElement('div',{className:'wsl'},'Best candidate (score '+(summary.best._score||0)+')'))
+      ),
+      React.createElement('div',{className:'wsnote'},'We only show markets with ',React.createElement('b',null,'$10–$4,000 total liquidity'),' in the order book (buy and sell sides combined). The emptier the book, the bigger the slice your $4–$25 order takes — and the larger your cut of the daily reward.')
+    ),
     !loading&&!error&&React.createElement('div',{className:'mbar'},
       React.createElement('button',{className:'mb'+(mode==='table'?' on':''),onClick:function(){setMode('table')}},'☰ Table'),
       React.createElement('button',{className:'mb'+(mode==='cards'?' on':''),onClick:function(){setMode('cards')}},'⊞ Cards'),
-      mode==='table'&&React.createElement('span',{className:'sh'},'Click column header to sort')
+      mode==='table'&&React.createElement('span',{className:'sh'},'Sorted by Opportunity score · click a column header to re-sort')
     ),
     loading&&React.createElement('div',{className:'pm'},loadMsg),
     loading&&(mode==='table'?React.createElement(SkTbl,null):React.createElement(SkCards,null)),
@@ -615,24 +729,27 @@ function App(){
     ),
     !loading&&!error&&sorted.length===0&&React.createElement('div',{className:'sb'},
       React.createElement('div',{className:'si'},'🔍'),
-      React.createElement('div',{className:'st'},'No markets found'),
-      React.createElement('div',{className:'ss'},'Loaded '+rawMarkets.length+' markets with rewards. None passed filters (minSize 20/40/50, spread < 5¢, reward ≥ 20, share ≥ 5%). Try again later.')
+      React.createElement('div',{className:'st'},'No undercrowded markets right now'),
+      React.createElement('div',{className:'ss'},'Loaded '+rawMarkets.length+' markets. None currently pass the filters (min stake 20/40/50, spread < 5¢, reward ≥ 20, and under $4000 total book liquidity). Books refresh every 60s — check back soon.')
     ),
     !loading&&!error&&sorted.length>0&&mode==='table'&&React.createElement('div',{className:'tw'},
       React.createElement('table',null,
         React.createElement('colgroup',null,
-          React.createElement('col',{className:'cm'}),React.createElement('col',{className:'cr'}),
-          React.createElement('col',{className:'cs'}),React.createElement('col',{className:'cn'}),
-          React.createElement('col',{className:'co'}),React.createElement('col',{className:'cp'}),
-          React.createElement('col',{className:'ca'})
+          React.createElement('col',{className:'cm'}),React.createElement('col',{className:'csc'}),
+          React.createElement('col',{className:'cst'}),React.createElement('col',{className:'csh'}),
+          React.createElement('col',{className:'cliq'}),React.createElement('col',{className:'csp'}),
+          React.createElement('col',{className:'crw'}),React.createElement('col',{className:'cbk'}),
+          React.createElement('col',{className:'copn'})
         ),
         React.createElement('thead',null,React.createElement('tr',null,
           React.createElement('th',null,'Market'),
-          React.createElement('th',{onClick:function(){toggleSort('reward')}},'Reward ',React.createElement('span',{className:'sa'+(sortKey==='reward'?' on':'')},arr('reward'))),
-          React.createElement('th',{onClick:function(){toggleSort('spread')}},'Spread ',React.createElement('span',{className:'sa'+(sortKey==='spread'?' on':'')},arr('spread'))),
-          React.createElement('th',{onClick:function(){toggleSort('minSize')}},'Min ',React.createElement('span',{className:'sa'+(sortKey==='minSize'?' on':'')},arr('minSize'))),
+          React.createElement('th',{className:'r',title:'Opportunity score 0-100, based on competition (share, book liquidity, spread).',onClick:function(){toggleSort('score')}},'Score ',React.createElement('span',{className:'sa'+(sortKey==='score'?' on':'')},arr('score'))),
+          React.createElement('th',null,'Status'),
+          React.createElement('th',{className:'r',title:'Your minimum stake as a share of the best bid level.',onClick:function(){toggleSort('pct')}},'Share ',React.createElement('span',{className:'sa'+(sortKey==='pct'?' on':'')},arr('pct'))),
+          React.createElement('th',{className:'r',title:'Total $ of all orders in the book, both sides. Lower = less competition.',onClick:function(){toggleSort('liquidity')}},'Liquidity ',React.createElement('span',{className:'sa'+(sortKey==='liquidity'?' on':'')},arr('liquidity'))),
+          React.createElement('th',{className:'r',onClick:function(){toggleSort('spread')}},'Spread ',React.createElement('span',{className:'sa'+(sortKey==='spread'?' on':'')},arr('spread'))),
+          React.createElement('th',{className:'r',title:'Daily reward in USDC.',onClick:function(){toggleSort('reward')}},'Reward ',React.createElement('span',{className:'sa'+(sortKey==='reward'?' on':'')},arr('reward'))),
           React.createElement('th',null,'Book'),
-          React.createElement('th',{className:'r',title:'What share of the best level volume our minimum stake takes. Higher % = better position.',onClick:function(){toggleSort('pct')}},'% in book ',React.createElement('span',{className:'sa'+(sortKey==='pct'?' on':'')},arr('pct'))),
           React.createElement('th',{className:'r'})
         )),
         React.createElement('tbody',null,sorted.map(function(m){
