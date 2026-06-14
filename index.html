@@ -61,7 +61,7 @@ body{min-height:100vh}
 .sh{font-size:11px;color:var(--hint);margin-left:auto}
 .tw{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
 table{width:100%;border-collapse:collapse;table-layout:fixed}
-col.cm{width:28%}col.csc{width:7%}col.cst{width:11%}col.csh{width:7%}col.cliq{width:9%}col.csp{width:8%}col.crw{width:6%}col.cbk{width:11%}col.copn{width:13%}
+col.cm{width:26%}col.csc{width:7%}col.cst{width:10%}col.csh{width:6%}col.cliq{width:9%}col.csp{width:7%}col.cmin{width:5%}col.crw{width:6%}col.cbk{width:11%}col.copn{width:13%}
 thead th{font-size:10px;font-weight:600;color:var(--hint);text-align:left;padding:10px 12px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;user-select:none;cursor:pointer;background:var(--card)}
 thead th:hover{color:var(--text)}thead th.r{text-align:right}
 .sa{margin-left:3px;font-size:9px;opacity:.4}.sa.on{opacity:1}
@@ -397,6 +397,7 @@ function TableRow(props){
     React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'mo'},a.pct.toFixed(0)+'%')),
     React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'mo'},'$'+Math.round(a.totalVol))),
     React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'mo'},a.spread>0?(a.spread*100).toFixed(1)+'¢':getSpr(m).toFixed(1)+'¢')),
+    React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'mo'},getMs(m))),
     React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'mo',style:{color:'var(--hint)'}},rew>0?rew.toFixed(0):'—')),
     React.createElement('td',null,React.createElement(MiniOB,{bids:a.bids,asks:a.asks})),
     React.createElement('td',null,
@@ -498,7 +499,7 @@ function SkTbl(){
       React.createElement('tbody',null,
         [0,1,2,3,4,5,6,7].map(function(i){
           return React.createElement('tr',{key:i},
-            [280,50,90,50,70,60,50,80,90].map(function(w,j){
+            [280,50,90,50,70,60,40,50,80,90].map(function(w,j){
               return React.createElement('td',{key:j},React.createElement('div',{className:'sk',style:{height:12,width:w}}));
             })
           );
@@ -753,7 +754,7 @@ function App(){
           React.createElement('col',{className:'cm'}),React.createElement('col',{className:'csc'}),
           React.createElement('col',{className:'cst'}),React.createElement('col',{className:'csh'}),
           React.createElement('col',{className:'cliq'}),React.createElement('col',{className:'csp'}),
-          React.createElement('col',{className:'crw'}),React.createElement('col',{className:'cbk'}),
+          React.createElement('col',{className:'cmin'}),React.createElement('col',{className:'crw'}),React.createElement('col',{className:'cbk'}),
           React.createElement('col',{className:'copn'})
         ),
         React.createElement('thead',null,React.createElement('tr',null,
@@ -763,6 +764,7 @@ function App(){
           React.createElement('th',{className:'r',title:'Your minimum stake as a share of the best bid level.',onClick:function(){toggleSort('pct')}},'Share ',React.createElement('span',{className:'sa'+(sortKey==='pct'?' on':'')},arr('pct'))),
           React.createElement('th',{className:'r',title:'Total $ of orders near the midpoint (competing for the reward), both sides. Far-away parked orders are ignored. Lower = less competition.',onClick:function(){toggleSort('liquidity')}},'Competition ',React.createElement('span',{className:'sa'+(sortKey==='liquidity'?' on':'')},arr('liquidity'))),
           React.createElement('th',{className:'r',onClick:function(){toggleSort('spread')}},'Spread ',React.createElement('span',{className:'sa'+(sortKey==='spread'?' on':'')},arr('spread'))),
+          React.createElement('th',{className:'r',title:'Minimum shares (doli) your order needs to qualify for rewards.',onClick:function(){toggleSort('minSize')}},'Min ',React.createElement('span',{className:'sa'+(sortKey==='minSize'?' on':'')},arr('minSize'))),
           React.createElement('th',{className:'r',title:'Daily reward in USDC.',onClick:function(){toggleSort('reward')}},'Reward ',React.createElement('span',{className:'sa'+(sortKey==='reward'?' on':'')},arr('reward'))),
           React.createElement('th',null,'Book'),
           React.createElement('th',{className:'r'})
