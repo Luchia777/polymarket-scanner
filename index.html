@@ -74,7 +74,7 @@ tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 .mo{font-family:var(--mono);font-size:12px}.g{color:var(--gd);font-weight:600}
 /* score number */
 .scn{font-family:var(--mono);font-weight:700;letter-spacing:-.5px}
-.scn.g{color:var(--gd)}.scn.a{color:#d97706}.scn.r{color:var(--red)}
+.scn.g{color:var(--gd)}.scn.a{color:#d97706}.scn.r{color:var(--red)}.scn.n{color:var(--muted)}
 /* status badge */
 .stb{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
 .stb.g{background:var(--gbg);color:var(--gt)}
@@ -82,6 +82,7 @@ tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 .stb.r{background:var(--rbg);color:var(--rt)}
 .stbd{width:7px;height:7px;border-radius:50%}
 .stb.g .stbd{background:var(--green)}.stb.a .stbd{background:#f59e0b}.stb.r .stbd{background:var(--red)}
+.stb.n{background:#f1f5f9;color:var(--muted)}.stb.n .stbd{background:#94a3b8}
 /* recommendation pill */
 .rec{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
 .rec.g{background:var(--gbg);color:var(--gt)}
@@ -99,6 +100,8 @@ tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 .ch.g{background:var(--gbg);color:var(--gt)}.ch.a{background:var(--abg);color:var(--at)}
 .obtn{display:inline-flex;align-items:center;gap:4px;padding:6px 13px;background:var(--green);color:#fff;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap;border:none;cursor:pointer;font-family:var(--font);transition:background .12s}
 .obtn:hover{background:var(--gd)}
+.obtn.alt{background:#f59e0b}.obtn.alt:hover{background:#d97706}
+.obtn.neutral{background:#fff;color:var(--muted);border:1px solid var(--border)}.obtn.neutral:hover{background:#f8fafc}
 .cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
 .mc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);display:flex;flex-direction:column;overflow:hidden;transition:box-shadow .15s,transform .15s}
 .mc:hover{box-shadow:0 6px 20px rgba(0,0,0,.1);transform:translateY(-2px)}
@@ -148,6 +151,8 @@ tbody td{padding:10px 12px;font-size:13px;vertical-align:middle}
 .mcf2 .ofbtn{flex:1}
 .ofbtn{display:flex;align-items:center;justify-content:center;gap:6px;padding:11px;background:var(--green);color:#fff;border-radius:var(--rs);font-size:14px;font-weight:600;text-decoration:none;border:none;cursor:pointer;font-family:var(--font);transition:background .12s}
 .ofbtn:hover{background:var(--gd)}
+.ofbtn.alt{background:#f59e0b}.ofbtn.alt:hover{background:#d97706}
+.ofbtn.neutral{background:#fff;color:var(--muted);border:1.5px solid var(--border)}.ofbtn.neutral:hover{background:#f8fafc}
 .sk{background:linear-gradient(90deg,#e2e8f0 25%,#f1f5f9 50%,#e2e8f0 75%);background-size:200% 100%;animation:sh2 1.4s infinite;border-radius:4px}
 @keyframes sh2{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .skc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;box-shadow:var(--sh)}
@@ -225,7 +230,7 @@ function analyzeBook(tid,book,ms,maxSpread){
   // max-spread. The CLOB book also returns far-away "parked" orders that never
   // compete for the daily reward; counting them wrongly inflated liquidity and
   // marked good markets as crowded. We sum (size * price) only for orders within
-  // +/- maxSpread of the midpoint, on both sides. Cap at $4000.
+  // +/- maxSpread of the midpoint, on both sides. Cap at $3300.
   var mid=(bb.price+ba.price)/2;
   var band=(maxSpread>0&&maxSpread<50?maxSpread:5)/100;
   function near(l){return Math.abs(l.price-mid)<=band+1e-9}
@@ -236,7 +241,7 @@ function analyzeBook(tid,book,ms,maxSpread){
   var stake=ms*bb.price;
   var pct=topBidVolume>0?(stake/topBidVolume)*100:0;
   var spreadCents=(ba.price-bb.price)*100;
-  var ok=totalVol>=10&&totalVol<=4000&&pct>=5&&pct<=100&&spreadCents<5;
+  var ok=totalVol>=10&&totalVol<=3300&&pct>=5&&pct<=100&&spreadCents<5;
   return{tokenId:tid,bestBidPrice:bb.price,bestAskPrice:ba.price,
     spread:ba.price-bb.price,topBidVolume:topBidVolume,ourStakeUSD:stake,pct:pct,totalVol:totalVol,
     ok:ok,bids:bids.slice(0,5),asks:asks.slice(0,5)};
@@ -245,23 +250,26 @@ function analyzeBook(tid,book,ms,maxSpread){
 function calcScore(a){
   if(!a||!a.ok)return 0;
   var share=Math.max(0,Math.min(100,a.pct));
-  var empt=Math.max(0,Math.min(100,(4000-a.totalVol)/4000*100));
+  var empt=Math.max(0,Math.min(100,(3300-a.totalVol)/3300*100));
   var sc=a.spread*100;
   var tight=Math.max(0,Math.min(100,(5-sc)/5*100));
   return Math.round(Math.max(0,Math.min(100,0.5*empt+0.3*tight+0.2*share)));
 }
-function scoreCls(s){return s>=70?'g':s>=40?'a':'r'}
-// Status reflects the SAME thing the filter cares about: total book liquidity.
-// Less money already in the book = our small order is a bigger slice = better.
-function statusOf(vol){
-  if(vol<=1000)return{label:'Excellent',cls:'g'};
-  if(vol<=2500)return{label:'Good',cls:'a'};
-  return{label:'Crowded',cls:'r'};
-}
-function recOf(s){
-  if(s>=70)return{label:'Recommended',cls:'g'};
+// Status, score colour and the button label all derive from the SAME 0-100
+// score, so they can never contradict each other.
+// 80-100 Excellent | 60-79 Good | 40-59 Worth checking | 0-39 Crowded.
+function scoreCls(s){return s>=60?'g':s>=40?'a':'n'}
+function statusOf(s){
+  if(s>=80)return{label:'Excellent',cls:'g'};
+  if(s>=60)return{label:'Good',cls:'g'};
   if(s>=40)return{label:'Worth checking',cls:'a'};
-  return{label:'Low priority',cls:'n'};
+  return{label:'Crowded',cls:'n'};
+}
+function btnInfo(s){
+  if(s>=80)return{label:'Open market',cls:''};
+  if(s>=60)return{label:'Check market',cls:''};
+  if(s>=40)return{label:'Check market',cls:' alt'};
+  return{label:'View anyway',cls:' neutral'};
 }
 function getTokens(m){
   var tokens=m.tokens||[];
@@ -327,7 +335,7 @@ function Dots5(props){
 }
 
 function StatusBadge(props){
-  var st=statusOf(props.vol);
+  var st=statusOf(props.score);
   return React.createElement('span',{className:'stb '+st.cls},
     React.createElement('span',{className:'stbd'}),st.label);
 }
@@ -375,7 +383,8 @@ function MiniOB(props){
 
 function TableRow(props){
   var m=props.m,a=m.analysis;
-  var rew=getRew(m);var score=m._score||0;var rec=recOf(score);
+  var rew=getRew(m);var score=m._score||0;
+  var btnCls=score>=60?'':score>=40?' alt':' neutral';
   return React.createElement('tr',null,
     React.createElement('td',null,
       React.createElement('div',{className:'qw'},
@@ -384,7 +393,7 @@ function TableRow(props){
       )
     ),
     React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'scn '+scoreCls(score),style:{fontSize:16}},score)),
-    React.createElement('td',null,React.createElement(StatusBadge,{vol:a.totalVol})),
+    React.createElement('td',null,React.createElement(StatusBadge,{score:score})),
     React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'mo'},a.pct.toFixed(0)+'%')),
     React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'mo'},'$'+Math.round(a.totalVol))),
     React.createElement('td',{style:{textAlign:'right'}},React.createElement('span',{className:'mo'},a.spread>0?(a.spread*100).toFixed(1)+'¢':getSpr(m).toFixed(1)+'¢')),
@@ -392,8 +401,7 @@ function TableRow(props){
     React.createElement('td',null,React.createElement(MiniOB,{bids:a.bids,asks:a.asks})),
     React.createElement('td',null,
       React.createElement('div',{className:'tdo'},
-        React.createElement('span',{className:'rec '+rec.cls,style:{fontSize:9,padding:'2px 7px'}},rec.label),
-        React.createElement('a',{className:'obtn',href:buildUrl(m),target:'_blank',rel:'noopener noreferrer'},'Open ↗')
+        React.createElement('a',{className:'obtn'+btnCls,href:buildUrl(m),target:'_blank',rel:'noopener noreferrer'},score>=80?'Open ↗':'View ↗')
       )
     )
   );
@@ -404,10 +412,10 @@ function MiniCard(props){
   var obOpen=useState(false);
   var setObOpen=obOpen[1];obOpen=obOpen[0];
   var a=m.analysis,ms=getMs(m),rew=getRew(m);
-  var score=m._score||0;var st=statusOf(a.totalVol);var rec=recOf(score);var scl=scoreCls(score);
-  var room=Math.max(0,Math.min(100,(4000-a.totalVol)/4000*100));
-  var roomCol=room>=70?'var(--green)':room>=40?'#f59e0b':'var(--red)';
-  var isBest=score>=70;
+  var score=m._score||0;var st=statusOf(score);var bi=btnInfo(score);var scl=scoreCls(score);
+  var room=Math.max(0,Math.min(100,(3300-a.totalVol)/3300*100));
+  var roomCol=room>=60?'var(--green)':room>=35?'#f59e0b':'#94a3b8';
+  var isBest=score>=80;
   var allV=a.bids.concat(a.asks).map(function(l){return l.size*l.price});
   var mx=Math.max.apply(null,allV.concat([0.01]));
   var bw=function(l){return Math.max(5,Math.min(80,(l.size*l.price/mx)*80))};
@@ -432,7 +440,7 @@ function MiniCard(props){
       ),
       React.createElement('div',{className:'heroBar'},
         React.createElement('div',{className:'heroBl'},
-          React.createElement('span',null,'Competition room ($'+Math.round(a.totalVol)+' of $4000 near mid)'),
+          React.createElement('span',null,'Competition room ($'+Math.round(a.totalVol)+' of $3300 near mid)'),
           React.createElement('span',null,room.toFixed(0)+'%')
         ),
         React.createElement('div',{className:'heroBt'},
@@ -479,8 +487,7 @@ function MiniCard(props){
       )
     ),
     React.createElement('div',{className:'mcf2'},
-      React.createElement('span',{className:'rec '+rec.cls},rec.label),
-      React.createElement('a',{className:'ofbtn',href:buildUrl(m),target:'_blank',rel:'noopener noreferrer'},'Open market ↗')
+      React.createElement('a',{className:'ofbtn'+bi.cls,href:buildUrl(m),target:'_blank',rel:'noopener noreferrer'},bi.label+' ↗')
     )
   );
 }
@@ -518,7 +525,7 @@ function SkCards(){
 function App(){
   var ms2=useState('table');var mode=ms2[0],setMode=ms2[1];
   var sk=useState('score');var sortKey=sk[0],setSortKey=sk[1];
-  var sd=useState(-1);var sortDir=sd[0],setSortDir=sd[1];
+  var sd=useState(1);var sortDir=sd[0],setSortDir=sd[1];
   var rm=useState([]);var rawMarkets=rm[0],setRaw=rm[1];
   var bk=useState({});var books=bk[0],setBooks=bk[1];
   var ld=useState(true);var loading=ld[0],setLoading=ld[1];
@@ -615,7 +622,7 @@ function App(){
       return Object.assign({},m,{_cl:compLvl(m),analysis:analysis,_tid:tid,_score:calcScore(analysis)});
     }).filter(function(m){
       // KEY: show only markets where total book liquidity is small enough
-      // that our stake is a meaningful slice (totalVol <= 4000).
+      // that our stake is a meaningful slice (totalVol <= 3300).
       if(!booksLoaded)return true;       // books still loading - show all
       if(!books[m._tid])return false;    // book not loaded yet - hide until loaded
       return m.analysis.ok;              // must pass order book check
@@ -649,9 +656,9 @@ function App(){
 
   function toggleSort(k){
     if(sortKey===k)setSortDir(function(d){return -d});
-    else{setSortKey(k);setSortDir(-1);}
+    else{setSortKey(k);setSortDir(1);}
   }
-  function arr(k){return sortKey===k?(sortDir===-1?'↓':'↑'):'↕'}
+  function arr(k){return sortKey===k?(sortDir===1?'↓':'↑'):'↕'}
 
   var msBadge={fontSize:13,fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',color:'var(--gt)',padding:'7px 14px',borderRadius:7,border:'1.5px solid #bbf7d0'};
   var critOn={fontSize:12,color:'var(--gt)',fontWeight:700,fontFamily:'var(--mono)',background:'var(--gbg)',padding:'5px 11px',borderRadius:6,border:'1.5px solid #bbf7d0'};
@@ -686,7 +693,7 @@ function App(){
         React.createElement('div',{className:'fg'},
           React.createElement('div',{className:'fl'},'Competition filter'),
           React.createElement('div',{style:{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}},
-            React.createElement('span',{title:'Sum of orders near the midpoint (the ones that compete for the reward), both buy and sell. Far-away parked orders are ignored. Lower = your small bid is a bigger slice.',style:critOn},'Competition $10–$4000'),
+            React.createElement('span',{title:'Sum of orders near the midpoint (the ones that compete for the reward), both buy and sell. Far-away parked orders are ignored. Lower = your small bid is a bigger slice.',style:critOn},'Competition $10–$3300'),
             React.createElement('span',{title:'Your minimum stake as a share of the best bid level.',style:critOff},'Your share ≥ 5%'),
             React.createElement('span',{style:critOff},'Spread < 5¢')
           )
@@ -720,7 +727,7 @@ function App(){
         React.createElement('div',{className:'wsi'},React.createElement('div',{className:'wsv'},summary.avgRew+'/day'),React.createElement('div',{className:'wsl'},'Average reward')),
         React.createElement('div',{className:'wsi'},React.createElement('div',{className:'wsq',title:summary.best.question},getCatLabel(summary.best)+' · '+summary.best.question),React.createElement('div',{className:'wsl'},'Best candidate (score '+(summary.best._score||0)+')'))
       ),
-      React.createElement('div',{className:'wsnote'},'We only show markets with ',React.createElement('b',null,'$10–$4,000 of competing liquidity'),' — orders near the midpoint that actually share the daily reward (both sides). Far-away parked orders are ignored. The emptier this zone, the bigger the slice your $4–$25 order takes.')
+      React.createElement('div',{className:'wsnote'},'We only show markets with ',React.createElement('b',null,'$10–$3,300 of competing liquidity'),' — orders near the midpoint that actually share the daily reward (both sides). Far-away parked orders are ignored. The emptier this zone, the bigger the slice your $4–$25 order takes.')
     ),
     !loading&&!error&&React.createElement('div',{className:'mbar'},
       React.createElement('button',{className:'mb'+(mode==='table'?' on':''),onClick:function(){setMode('table')}},'☰ Table'),
@@ -738,7 +745,7 @@ function App(){
     !loading&&!error&&sorted.length===0&&React.createElement('div',{className:'sb'},
       React.createElement('div',{className:'si'},'🔍'),
       React.createElement('div',{className:'st'},'No undercrowded markets right now'),
-      React.createElement('div',{className:'ss'},'Loaded '+rawMarkets.length+' markets. None currently pass the filters (min stake 20/40/50, spread < 5¢, reward ≥ 20, and under $4000 total book liquidity). Books refresh every 60s — check back soon.')
+      React.createElement('div',{className:'ss'},'Loaded '+rawMarkets.length+' markets. None currently pass the filters (min stake 20/40/50, spread < 5¢, reward ≥ 20, and under $3300 total competing liquidity). Books refresh every 60s — check back soon.')
     ),
     !loading&&!error&&sorted.length>0&&mode==='table'&&React.createElement('div',{className:'tw'},
       React.createElement('table',null,
